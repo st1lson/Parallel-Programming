@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 public class BounceFrame extends JFrame {
     private BallCanvas canvas;
-    public static final int WIDTH = 450;
+    public static final int WIDTH = 700;
     public static final int HEIGHT = 350;
 
     public BounceFrame() {
@@ -25,21 +25,25 @@ public class BounceFrame extends JFrame {
 
         JButton buttonStart = new JButton("Start");
 
-        JButton buttonAddBlue = new JButton("Add blue");
-        JButton buttonAddRed = new JButton("Add red");
+        JButton firstAddBallsButton = new JButton("Add balls (1 red 50 blue)");
+        JButton secondAddBallsButton = new JButton("Add balls (1 red 500 blue)");
 
         JButton buttonStop = new JButton("Stop");
 
-        buttonAddBlue.addActionListener((ActionEvent e) -> {
-            for (int i = 0; i < 100; i++) {
-                Ball ball = new Ball(canvas);
-                canvas.add(ball);
+        firstAddBallsButton.addActionListener((ActionEvent e) -> {
+            for (int i = 0; i < 50; i++) {
+                canvas.add(new Ball(canvas));
             }
+
+            canvas.add(new Ball(canvas, BallType.RED));
         });
 
-        buttonAddRed.addActionListener((ActionEvent e) -> {
-            Ball ball = new Ball(canvas, BallType.RED);
-            canvas.add(ball);
+        secondAddBallsButton.addActionListener((ActionEvent e) -> {
+            for (int i = 0; i < 500; i++) {
+                canvas.add(new Ball(canvas));
+            }
+
+            canvas.add(new Ball(canvas, BallType.RED));
         });
 
         buttonStart.addActionListener((ActionEvent e) -> {
@@ -54,8 +58,8 @@ public class BounceFrame extends JFrame {
         });
 
         buttonPanel.add(buttonStart);
-        buttonPanel.add(buttonAddBlue);
-        buttonPanel.add(buttonAddRed);
+        buttonPanel.add(firstAddBallsButton);
+        buttonPanel.add(secondAddBallsButton);
         buttonPanel.add(buttonStop);
 
         content.add(buttonPanel, BorderLayout.SOUTH);

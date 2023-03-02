@@ -2,8 +2,9 @@ package lab1.task5;
 
 public class Program {
     public static void main(String[] args) {
-        PrintThread firstThread = new PrintThread("-");
-        PrintThread secondThread = new PrintThread("|");
+        Boolean isSynchronized = Boolean.FALSE;
+        PrintThread firstThread = new PrintThread('-', isSynchronized);
+        PrintThread secondThread = new PrintThread('|', isSynchronized);
         firstThread.start();
         secondThread.start();
     }
