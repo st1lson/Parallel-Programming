@@ -20,7 +20,6 @@ public class BallThread extends Thread {
                 this.parentThread.join();
             for (int i = 1; i< 1000; i++) {
                 ball.move();
-                System.out.println("Thread name = " + Thread.currentThread().getName());
                 Thread.sleep(5);
             }
         } catch (Exception e) {

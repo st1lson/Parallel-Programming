@@ -26,7 +26,7 @@ public class BounceFrame extends JFrame {
         JButton buttonStart = new JButton("Start");
 
         JButton firstAddBallsButton = new JButton("Add balls (1 red 50 blue)");
-        JButton secondAddBallsButton = new JButton("Add balls (1 red 2500 blue)");
+        JButton secondAddBallsButton = new JButton("Add balls (1 red 1000 blue)");
 
         JButton buttonStop = new JButton("Stop");
 
@@ -39,7 +39,7 @@ public class BounceFrame extends JFrame {
         });
 
         secondAddBallsButton.addActionListener((ActionEvent e) -> {
-            for (int i = 0; i < 2500; i++) {
+            for (int i = 0; i < 1000; i++) {
                 canvas.add(new Ball(canvas));
             }
 

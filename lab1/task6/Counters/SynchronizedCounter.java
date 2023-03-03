@@ -17,5 +17,4 @@ public class SynchronizedCounter implements ICounter {
     public synchronized void decrement() {
         this.value--;
     }
-    
 }
