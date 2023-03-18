@@ -5,8 +5,8 @@ import lab2.Models.Matrix;
 
 public class Program {
     public static void main(String[] args) {
-        var firstMatrix = new Matrix(3, 3, 1);
-        var secondMatrix = new Matrix(3, 3, 10);
+        var firstMatrix = new Matrix(2500, 2500, 1);
+        var secondMatrix = new Matrix(2500, 2500, 10);
 
         var rowAlgorithm = new RowAlgorithm(firstMatrix, secondMatrix);
 

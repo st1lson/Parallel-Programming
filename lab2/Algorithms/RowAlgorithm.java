@@ -19,6 +19,7 @@ public final class RowAlgorithm implements IAlgorithm {
 
     @Override
     public Result solve() {
+        long startTime = System.nanoTime();
         var rows = this.firstMatrix.clone().getMatrix();
         var columns = Matrix.transpose(this.secondMatrix.clone()).getMatrix();
         var rowsCount = this.firstMatrix.getRows();
@@ -48,6 +49,9 @@ public final class RowAlgorithm implements IAlgorithm {
 
         executor.shutdown();
 
-        return new Result(new Matrix(resultMatrix));
+        var endTime = System.nanoTime();
+        var result = new Result(new Matrix(resultMatrix), endTime - startTime);
+
+        return result;
     }
 }
