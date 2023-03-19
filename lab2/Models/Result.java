@@ -11,6 +11,10 @@ public final class Result {
         this.duration = TimeUnit.NANOSECONDS.toMillis(duration);
     }
 
+    public Matrix getMatrix() {
+        return this.resultMatrix;
+    }
+
     @Override
     public String toString() {
         var builder = new StringBuilder();
