@@ -1,16 +1,19 @@
 package lab2.Algorithms;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import lab2.Interfaces.IAlgorithm;
 import lab2.Models.Matrix;
 import lab2.Models.Result;
+import lab2.Models.SubTask;
 
 public final class RowAlgorithm implements IAlgorithm {   
     private final Matrix firstMatrix;
     private final Matrix secondMatrix;
+
+    private static final int ITEMS_PER_THREAD = 75;
 
     public RowAlgorithm(Matrix firstMatrix, Matrix secondMatrix) {
         this.firstMatrix = firstMatrix;
@@ -24,31 +27,37 @@ public final class RowAlgorithm implements IAlgorithm {
         var columns = Matrix.transpose(this.secondMatrix.clone()).getMatrix();
         var rowsCount = this.firstMatrix.getRows();
         var columnsCount = this.secondMatrix.getColumns();
-        var resultMatrix = new int[rowsCount][columnsCount];
+        var resultMatrix = new Matrix(rowsCount, columnsCount);
 
-        var executor = Executors.newFixedThreadPool(numberOfThreads);
         try {
+            var threadPool = Executors.newFixedThreadPool(numberOfThreads);
+            var counter = 0;
+            var tasks = new CopyOnWriteArrayList<SubTask>();
             for (int i = 0; i < rowsCount; i++) {
-                var tasks = new ArrayList<Future<Integer>>();
                 for (int j = 0; j < columnsCount; j++) {
-                    var col = (i + j) % columnsCount;
-                    tasks.add(executor.submit(new RowAlgorithmThread(rows[i], columns[col])));
-                }
+                    if (counter == ITEMS_PER_THREAD) {
+                        threadPool.execute(new RowAlgorithmThread(tasks, resultMatrix));
+                        tasks.clear();
+                        counter = 0;
+                    }
 
-                for (int j = 0; j < columnsCount; j++) {
-                    var col = (i + j) % columnsCount;
-                    resultMatrix[i][col] = tasks.get(j).get().intValue();
+                    tasks.add(new SubTask(rows[i], columns[j], i, j));
+                    counter++;
                 }
             }
+            if (counter > 0) {
+                threadPool.execute(new RowAlgorithmThread(tasks, resultMatrix));
+            }
+
+            threadPool.shutdown();
+            threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
-        executor.shutdown();
-
         var endTime = System.nanoTime();
-        var result = new Result(new Matrix(resultMatrix), endTime - startTime);
+        var result = new Result(resultMatrix, endTime - startTime);
 
         return result;
     }
@@ -64,8 +73,7 @@ public final class RowAlgorithm implements IAlgorithm {
 
         for (int i = 0; i < rowsCount; i++) {
             for (int j = 0; j < columnsCount; j++) {
-                var col = (i + j) % columnsCount;
-                resultMatrix[i][col] = multiplyArrays(rows[i], columns[col]);
+                resultMatrix[i][j] = multiplyArrays(rows[i], columns[j]);
             }
         }
 

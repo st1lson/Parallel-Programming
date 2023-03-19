@@ -74,6 +74,10 @@ public final class Matrix {
         return this.items;
     }
 
+    public void setItem(int i, int j, int item) {
+        this.items[i][j] = item;
+    }
+
     @Override
     public Matrix clone() {
         int[][] copy = new int[this.rows][this.columns];
