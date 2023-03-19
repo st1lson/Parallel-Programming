@@ -27,8 +27,6 @@ public final class Matrix {
         this.items = new int[rows][columns];
     }
 
-
-
     private final int[][] generateMatrix(int rows, int columns) {
         var matrix = new int[rows][columns];
         
