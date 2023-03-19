@@ -3,17 +3,17 @@ package lab2.Algorithms;
 import lab2.Models.Matrix;
 
 public class FoxAlgorithmThread extends Thread {
-    private final Matrix A;
-    private final Matrix B;
-    private final Matrix C;
+    private final Matrix firstMatrix;
+    private final Matrix secondMatrix;
+    private final Matrix resultMatrix;
 
     private final int stepI;
     private final int stepJ;
 
-    public FoxAlgorithmThread(Matrix A, Matrix B, Matrix C, int stepI, int stepJ) {
-        this.A = A;
-        this.B = B;
-        this.C = C;
+    public FoxAlgorithmThread(Matrix firstMatrix, Matrix secondMatrix, Matrix resultMatrix, int stepI, int stepJ) {
+        this.firstMatrix = firstMatrix;
+        this.secondMatrix = secondMatrix;
+        this.resultMatrix = resultMatrix;
 
         this.stepI = stepI;
         this.stepJ = stepJ;
@@ -26,17 +26,17 @@ public class FoxAlgorithmThread extends Thread {
         for (int i = 0; i < blockRes.getRows(); i++) {
             for (int j = 0; j < blockRes.getColumns(); j++) {
 
-                C.getMatrix()[i + stepI][j + stepJ] += blockRes.getMatrix()[i][j];
+                resultMatrix.getMatrix()[i + stepI][j + stepJ] += blockRes.getMatrix()[i][j];
             }
         }
     }
 
     private Matrix multiplyBlock() {
-        Matrix blockRes = new Matrix(A.getRows(), B.getColumns());
-        for (int i = 0; i < A.getRows(); i++) {
-            for (int j = 0; j < B.getColumns(); j++) {
-                for (int k = 0; k < A.getColumns(); k++) {
-                    blockRes.getMatrix()[i][j] += A.getMatrix()[i][k] * B.getMatrix()[k][j];
+        Matrix blockRes = new Matrix(firstMatrix.getRows(), secondMatrix.getColumns());
+        for (int i = 0; i < firstMatrix.getRows(); i++) {
+            for (int j = 0; j < secondMatrix.getColumns(); j++) {
+                for (int k = 0; k < firstMatrix.getColumns(); k++) {
+                    blockRes.getMatrix()[i][j] += firstMatrix.getMatrix()[i][k] * secondMatrix.getMatrix()[k][j];
                 }
             }
         }

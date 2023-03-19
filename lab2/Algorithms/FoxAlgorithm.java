@@ -41,6 +41,7 @@ public class FoxAlgorithm implements IAlgorithm {
 
     @Override
     public Result solve(int threadsNumber) {
+        var startTime = System.nanoTime();
         var resultMatrix = new Matrix(firstMatrix.getRows(), secondMatrix.getColumns());
 
         var numberOfThreads = Math.min(threadsNumber, firstMatrix.getRows());
@@ -48,7 +49,7 @@ public class FoxAlgorithm implements IAlgorithm {
         numberOfThreads = findNearestDivider(numberOfThreads, firstMatrix.getRows());
         var step = firstMatrix.getRows() / numberOfThreads;
 
-        var exec = Executors.newFixedThreadPool(numberOfThreads);
+        var threadPool = Executors.newFixedThreadPool(numberOfThreads);
         var threads = new ArrayList<Future>();
 
         var matrixOfSizesI = new int[numberOfThreads][numberOfThreads];
@@ -83,7 +84,7 @@ public class FoxAlgorithm implements IAlgorithm {
                             resultMatrix,
                             stepI0,
                             stepJ0);
-                    threads.add(exec.submit(thread));
+                    threads.add(threadPool.submit(thread));
                 }
             }
         }
@@ -96,9 +97,12 @@ public class FoxAlgorithm implements IAlgorithm {
             }
         }
 
-        exec.shutdown();
+        threadPool.shutdown();
 
-        return new Result(resultMatrix, stepI);
+        var endTime = System.nanoTime();
+        var result = new Result(resultMatrix, endTime - startTime);
+
+        return result;
     }
 
     @Override
@@ -107,10 +111,11 @@ public class FoxAlgorithm implements IAlgorithm {
     }
 
     private Matrix copyBlock(Matrix matrix, int i, int j, int size) {
-        Matrix block = new Matrix(size, size);
+        var block = new Matrix(size, size);
         for (int k = 0; k < size; k++) {
             System.arraycopy(matrix.getMatrix()[k + i], j, block.getMatrix()[k], 0, size);
         }
+
         return block;
     }
 }
