@@ -94,5 +94,4 @@ public class ThreadPoolTask {
             this.calculator.increment(result);
         }
     }
-    
 }
