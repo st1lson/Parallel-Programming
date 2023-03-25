@@ -41,7 +41,7 @@ public class FoxAlgorithm implements IAlgorithm {
 
     @Override
     public Result solve(int threadsNumber) {
-        var startTime = System.nanoTime();
+        var startTime = System.currentTimeMillis();
         var resultMatrix = new Matrix(firstMatrix.getRows(), secondMatrix.getColumns());
 
         var numberOfThreads = Math.min(threadsNumber, firstMatrix.getRows());
@@ -99,7 +99,7 @@ public class FoxAlgorithm implements IAlgorithm {
 
         threadPool.shutdown();
 
-        var endTime = System.nanoTime();
+        var endTime = System.currentTimeMillis();
         var result = new Result(resultMatrix, endTime - startTime);
 
         return result;

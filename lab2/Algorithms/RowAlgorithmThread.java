@@ -1,28 +1,34 @@
 package lab2.Algorithms;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import lab2.Models.Matrix;
-import lab2.Models.SubTask;
 
 public class RowAlgorithmThread implements Runnable {
-    private final CopyOnWriteArrayList<SubTask> tasks;
+
+    private final int[] row;
+    private final int[] column;
+
+    private final int i;
+    private final int j;
+
     private final Matrix resultMatrix;
 
-    public RowAlgorithmThread(CopyOnWriteArrayList<SubTask> tasks, Matrix resultMatrix) {
-        this.tasks = tasks;
+    public RowAlgorithmThread(int[] row, int[] column, int i, int j, Matrix resultMatrix) {
+        this.row = row;
+        this.column = column;
+
+        this.i = i;
+        this.j = j;
+
         this.resultMatrix = resultMatrix;
     }
 
     @Override
     public void run() {
-        for (SubTask task : this.tasks) {
-            var result = 0;
-            for (int i = 0; i < task.getRow().length; i++) {
-                result += task.getRow()[i] * task.getColumn()[i];
-            }
-            
-            this.resultMatrix.setItem(task.getI(), task.getJ(), result);
+        var result = 0;
+        for (int i = 0; i < this.row.length; i++) {
+            result += this.row[i] * this.column[i];
         }
+        
+        this.resultMatrix.setItem(this.i, this.j, result);
     }
 }
