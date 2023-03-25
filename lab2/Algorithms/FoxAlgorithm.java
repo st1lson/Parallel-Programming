@@ -18,25 +18,28 @@ public class FoxAlgorithm implements IAlgorithm {
         this.secondMatrix = secondMatrix;
     }
 
-    private int findNearestDivider(int s, int p) {
-        var i = s;
+    private int findNumberOfThreads(int threadsNumber, int rows) {
+        var numberOfThreads = Math.min(threadsNumber, this.firstMatrix.getRows());
+        numberOfThreads = Math.min(numberOfThreads, this.firstMatrix.getRows());
+        
+        var i = numberOfThreads;
         while (i > 1) {
-            if (p % i == 0) {
+            if (rows % i == 0) {
                 break;
             }
 
-            if (i >= s) {
+            if (i >= numberOfThreads) {
                 i++;
             } else {
                 i--;
             }
 
-            if (i > Math.sqrt(p)) {
-                i = Math.min(s, p / s) - 1;
+            if (i > Math.sqrt(rows)) {
+                i = Math.min(numberOfThreads, rows / numberOfThreads) - 1;
             }
         }
 
-        return i >= s ? i : i != 0 ? p / i : p;
+        return i >= numberOfThreads ? i : i != 0 ? rows / i : rows;
     }
 
     @Override
@@ -44,13 +47,11 @@ public class FoxAlgorithm implements IAlgorithm {
         var startTime = System.currentTimeMillis();
         var resultMatrix = new Matrix(firstMatrix.getRows(), secondMatrix.getColumns());
 
-        var numberOfThreads = Math.min(threadsNumber, firstMatrix.getRows());
-        numberOfThreads = Math.min(numberOfThreads, firstMatrix.getRows());
-        numberOfThreads = findNearestDivider(numberOfThreads, firstMatrix.getRows());
+        var numberOfThreads = findNumberOfThreads(threadsNumber, firstMatrix.getRows());
         var step = firstMatrix.getRows() / numberOfThreads;
 
         var threadPool = Executors.newFixedThreadPool(numberOfThreads);
-        var threads = new ArrayList<Future>();
+        var threads = new ArrayList<Future<?>>();
 
         var matrixOfSizesI = new int[numberOfThreads][numberOfThreads];
         var matrixOfSizesJ = new int[numberOfThreads][numberOfThreads];
