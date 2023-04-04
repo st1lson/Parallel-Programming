@@ -27,6 +27,31 @@ public final class Matrix {
         this.items = new int[rows][columns];
     }
 
+    public Matrix(Matrix[][] matrix, int rows, int columns) {
+        this.rows = rows;
+        this.columns = columns;
+        this.items = new int[rows][columns];
+
+        var totalItems = matrix.length;
+        var subMatrixSize = matrix[0][0].getRows();
+
+        for (var i = 0; i < totalItems; i++) {
+            for (var j = 0; j < totalItems; j++) {
+                var currentMatrix = matrix[i][j].getMatrix();
+
+                for (var k = 0; k < subMatrixSize; k++) {
+                    for (var p = 0; p < subMatrixSize; p++) {
+                        if(i * subMatrixSize + k >= rows || j * subMatrixSize + p >= columns){
+                            continue;
+                        }
+                        
+                        this.items[i * subMatrixSize + k][j * subMatrixSize + p] = currentMatrix[k][p];
+                    }
+                }
+            }
+        }
+    }
+
     private final int[][] generateMatrix(int rows, int columns) {
         var matrix = new int[rows][columns];
         
@@ -56,6 +81,28 @@ public final class Matrix {
         return new Matrix(transposedMatrix);
     }
 
+    public static final Matrix[][] splitMatrix(Matrix matrix, int step) {
+        var result = new Matrix[step][step];
+        int matrixSize = (matrix.getColumns() + step - 1) / step;
+        for (int i = 0; i < step; i++) {
+            for (int j = 0; j < step; j++) {
+                result[i][j] = new Matrix(matrixSize, matrixSize);
+                int[][] subMatrix = result[i][j].getMatrix();
+                for (int i1 = 0; i1 < matrixSize; i1++) {
+                    for (int j1 = 0; j1 < subMatrix.length; j1++) {
+                        if(i * matrixSize + i1 >= matrix.getRows() || j * matrixSize + j1 >= matrix.getColumns()){
+                            subMatrix[i1][j1] = 0;
+                            continue;
+                        }
+                        subMatrix[i1][j1] = matrix.getMatrix()[i * matrixSize + i1][j * matrixSize + j1];
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
     public int[] getRow(int row) {
         return items[row];
     }
@@ -78,6 +125,15 @@ public final class Matrix {
 
     public void addItem(int i, int j, int value) {
         this.items[i][j] += value;
+    }
+
+    public static final Matrix copyBlock(Matrix matrix, int i, int j, int size) {
+        var block = new Matrix(size, size);
+        for (var k = 0; k < size; k++) {
+            System.arraycopy(matrix.getMatrix()[k + i], j, block.getMatrix()[k], 0, size);
+        }
+
+        return block;
     }
 
     @Override

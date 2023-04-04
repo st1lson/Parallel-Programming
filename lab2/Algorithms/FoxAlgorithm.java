@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import lab2.Interfaces.IAlgorithm;
 import lab2.Models.Matrix;
@@ -45,63 +46,46 @@ public class FoxAlgorithm implements IAlgorithm {
     @Override
     public Result solve(int threadsNumber) {
         var startTime = System.currentTimeMillis();
-        var resultMatrix = new Matrix(firstMatrix.getRows(), secondMatrix.getColumns());
 
         var numberOfThreads = findNumberOfThreads(threadsNumber, firstMatrix.getRows());
-        var step = firstMatrix.getRows() / numberOfThreads;
-
         var threadPool = Executors.newFixedThreadPool(numberOfThreads);
-        var threads = new ArrayList<Future<?>>();
 
-        var matrixOfSizesI = new int[numberOfThreads][numberOfThreads];
-        var matrixOfSizesJ = new int[numberOfThreads][numberOfThreads];
-
-        var stepI = 0;
-        for (int i = 0; i < numberOfThreads; i++) {
-            var stepJ = 0;
-            for (int j = 0; j < numberOfThreads; j++) {
-                matrixOfSizesI[i][j] = stepI;
-                matrixOfSizesJ[i][j] = stepJ;
-                stepJ += step;
+        var firstSplittedMatrixes = Matrix.splitMatrix(this.firstMatrix, threadsNumber);
+        var secondSplittedMatrixes = Matrix.splitMatrix(this.secondMatrix, threadsNumber);
+        
+        int count = this.firstMatrix.getMatrix().length;
+        int subMatrixSize = firstSplittedMatrixes[0][0].getRows();
+        var resultMatrix = new Matrix[count][count];
+        for (int i = 0; i < count; i++) {
+            for (int j = 0; j < count; j++) {
+                resultMatrix[i][j] = new Matrix(subMatrixSize, subMatrixSize);
             }
-            stepI += step;
         }
 
-        for (int l = 0; l < numberOfThreads; l++) {
-            for (int i = 0; i < numberOfThreads; i++) {
-                for (int j = 0; j < numberOfThreads; j++) {
-                    var stepI0 = matrixOfSizesI[i][j];
-                    var stepJ0 = matrixOfSizesJ[i][j];
+        for (int k = 0; k < count; k++) {
+            var tasks = new ArrayList<Future<Matrix>>();
+            for (int i = 0; i < count; i++) {
+                for (int j = 0; j < count; j++) {
+                    tasks.add(threadPool.submit(new FoxAlgorithmThread(firstSplittedMatrixes[i][(i + k) % count], secondSplittedMatrixes[(i + k) % count][j], resultMatrix[i][j])));
+                }
+            }
 
-                    var stepI1 = matrixOfSizesI[i][(i + l) % numberOfThreads];
-                    var stepJ1 = matrixOfSizesJ[i][(i + l) % numberOfThreads];
+            for (int i = 0; i < count; i++) {
+                for (int j = 0; j < count; j++) {
+                    try {
+                        if (resultMatrix[i][j] == null) {
+                            resultMatrix[i][j] = new Matrix(subMatrixSize, subMatrixSize);
+                        }
 
-                    var stepI2 = matrixOfSizesI[(i + l) % numberOfThreads][j];
-                    var stepJ2 = matrixOfSizesJ[(i + l) % numberOfThreads][j];
-
-                    var thread = new FoxAlgorithmThread(
-                            copyBlock(firstMatrix, stepI1, stepJ1, step),
-                            copyBlock(secondMatrix, stepI2, stepJ2, step),
-                            resultMatrix,
-                            stepI0,
-                            stepJ0);
-                    threads.add(threadPool.submit(thread));
+                        resultMatrix[i][j] = tasks.get(i * count + j).get();
+                    } catch (Exception e) {
+                    }
                 }
             }
         }
 
-        for (var mapFuture : threads) {
-            try {
-                mapFuture.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-
-        threadPool.shutdown();
-
         var endTime = System.currentTimeMillis();
-        var result = new Result(resultMatrix, endTime - startTime);
+        var result = new Result(new Matrix(resultMatrix, this.firstMatrix.getRows(), this.secondMatrix.getColumns()), endTime - startTime);
 
         return result;
     }
@@ -109,14 +93,5 @@ public class FoxAlgorithm implements IAlgorithm {
     @Override
     public Result solve() {
         throw new UnsupportedOperationException();
-    }
-
-    private Matrix copyBlock(Matrix matrix, int i, int j, int size) {
-        var block = new Matrix(size, size);
-        for (int k = 0; k < size; k++) {
-            System.arraycopy(matrix.getMatrix()[k + i], j, block.getMatrix()[k], 0, size);
-        }
-
-        return block;
     }
 }
