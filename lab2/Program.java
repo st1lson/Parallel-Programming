@@ -10,12 +10,24 @@ public class Program {
         var firstMatrix = new Matrix(5, 5, 1);
         var secondMatrix = new Matrix(5, 5, 10);
 
-        var rowAlgorithm = new StripedAlgorithm(firstMatrix, secondMatrix);
+        var strippedAlgorithm = new StripedAlgorithm(firstMatrix, secondMatrix);
 
-        var result = rowAlgorithm.solve(Runtime.getRuntime().availableProcessors());
-        // var syncResult = rowAlgorithm.solve();
+        var processors = Runtime.getRuntime().availableProcessors();
 
-        System.out.println(result.getMatrix());
-        // System.out.println(syncResult);
+        var parallelStrippedResult = strippedAlgorithm.solve(processors);
+        var syncStrippedResult = strippedAlgorithm.solve();
+
+        var strippedImprovedAlgorithm = new StripedImprovedAlgorithm(firstMatrix, secondMatrix);
+
+        var strippedImprovedResult = strippedImprovedAlgorithm.solve(processors);
+
+        var foxAlgorithm = new FoxAlgorithm(firstMatrix, secondMatrix);
+
+        var parallelFoxResult = foxAlgorithm.solve(processors);
+
+        System.out.println(String.format("Parallel stripped algorithm: %s", parallelStrippedResult));
+        System.out.println(String.format("Sync stripped algorithm: %s", syncStrippedResult));
+        System.out.println(String.format("Parallel stripped improved algorithm: %s", strippedImprovedResult));
+        System.out.println(String.format("Parallel Fox algorithm: %s", parallelFoxResult));
     }
 }
