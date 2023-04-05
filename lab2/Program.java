@@ -1,8 +1,8 @@
 package lab2;
 
 import lab2.Algorithms.FoxAlgorithm;
-import lab2.Algorithms.StripedAlgorithm;
-import lab2.Algorithms.StripedImprovedAlgorithm;
+import lab2.Algorithms.RowAlgorithm;
+import lab2.Algorithms.RowImprovedAlgorithm;
 import lab2.Models.Matrix;
 
 public class Program {
@@ -10,14 +10,14 @@ public class Program {
         var firstMatrix = new Matrix(5, 5, 1);
         var secondMatrix = new Matrix(5, 5, 10);
 
-        var strippedAlgorithm = new StripedAlgorithm(firstMatrix, secondMatrix);
+        var strippedAlgorithm = new RowAlgorithm(firstMatrix, secondMatrix);
 
         var processors = Runtime.getRuntime().availableProcessors();
 
         var parallelStrippedResult = strippedAlgorithm.solve(processors);
         var syncStrippedResult = strippedAlgorithm.solve();
 
-        var strippedImprovedAlgorithm = new StripedImprovedAlgorithm(firstMatrix, secondMatrix);
+        var strippedImprovedAlgorithm = new RowImprovedAlgorithm(firstMatrix, secondMatrix);
 
         var strippedImprovedResult = strippedImprovedAlgorithm.solve(processors);
 

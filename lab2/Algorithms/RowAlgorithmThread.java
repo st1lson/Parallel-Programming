@@ -2,7 +2,7 @@ package lab2.Algorithms;
 
 import lab2.Models.Matrix;
 
-public class StripedAlgorithmThread implements Runnable {
+public class RowAlgorithmThread implements Runnable {
 
     private final int[] row;
     private final int[] column;
@@ -12,7 +12,7 @@ public class StripedAlgorithmThread implements Runnable {
 
     private final Matrix resultMatrix;
 
-    public StripedAlgorithmThread(int[] row, int[] column, int i, int j, Matrix resultMatrix) {
+    public RowAlgorithmThread(int[] row, int[] column, int i, int j, Matrix resultMatrix) {
         this.row = row;
         this.column = column;
 

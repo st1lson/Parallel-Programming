@@ -1,21 +1,18 @@
 package lab2.Algorithms;
 
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import lab2.Interfaces.IAlgorithm;
 import lab2.Models.Matrix;
 import lab2.Models.Result;
-import lab2.Models.SubTask;
 
-public final class StripedImprovedAlgorithm implements IAlgorithm {   
+public final class RowAlgorithm implements IAlgorithm {
+
     private final Matrix firstMatrix;
     private final Matrix secondMatrix;
 
-    private static final int ITEMS_PER_THREAD = 75;
-
-    public StripedImprovedAlgorithm(Matrix firstMatrix, Matrix secondMatrix) {
+    public RowAlgorithm(Matrix firstMatrix, Matrix secondMatrix) {
         this.firstMatrix = firstMatrix;
         this.secondMatrix = secondMatrix;
     }
@@ -31,22 +28,10 @@ public final class StripedImprovedAlgorithm implements IAlgorithm {
 
         try {
             var threadPool = Executors.newFixedThreadPool(numberOfThreads);
-            var counter = 0;
-            var tasks = new CopyOnWriteArrayList<SubTask>();
             for (int i = 0; i < rowsCount; i++) {
                 for (int j = 0; j < columnsCount; j++) {
-                    if (counter == ITEMS_PER_THREAD) {
-                        threadPool.execute(new StripedImprovedAlgorithmThread(tasks, resultMatrix));
-                        tasks.clear();
-                        counter = 0;
-                    }
-
-                    tasks.add(new SubTask(rows[i], columns[j], i, j));
-                    counter++;
+                    threadPool.execute(new RowAlgorithmThread(rows[i], columns[j], i, j, resultMatrix));
                 }
-            }
-            if (counter > 0) {
-                threadPool.execute(new StripedImprovedAlgorithmThread(tasks, resultMatrix));
             }
 
             threadPool.shutdown();
@@ -64,6 +49,22 @@ public final class StripedImprovedAlgorithm implements IAlgorithm {
 
     @Override
     public Result solve() {
-        throw new UnsupportedOperationException();
+        var startTime = System.currentTimeMillis();
+        var rowsCount = this.firstMatrix.getRows();
+        var columnsCount = this.secondMatrix.getColumns();
+        var resultMatrix = new int[rowsCount][columnsCount];
+
+        for (int i = 0; i < rowsCount; i++) {
+            for (int j = 0; j < columnsCount; j++) {
+                for (int k = 0; k < rowsCount; k++) {
+                    resultMatrix[i][j] += this.firstMatrix.getMatrix()[i][k] * this.secondMatrix.getMatrix()[k][j];
+                }
+            }
+        }
+
+        var endTime = System.currentTimeMillis();
+        var result = new Result(new Matrix(resultMatrix), endTime - startTime);
+
+        return result;
     }
 }

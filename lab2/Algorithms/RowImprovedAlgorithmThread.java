@@ -5,11 +5,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import lab2.Models.Matrix;
 import lab2.Models.SubTask;
 
-public class StripedImprovedAlgorithmThread implements Runnable {
+public class RowImprovedAlgorithmThread implements Runnable {
     private final CopyOnWriteArrayList<SubTask> tasks;
     private final Matrix resultMatrix;
 
-    public StripedImprovedAlgorithmThread(CopyOnWriteArrayList<SubTask> tasks, Matrix resultMatrix) {
+    public RowImprovedAlgorithmThread(CopyOnWriteArrayList<SubTask> tasks, Matrix resultMatrix) {
         this.tasks = tasks;
         this.resultMatrix = resultMatrix;
     }
