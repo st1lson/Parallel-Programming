@@ -9,6 +9,11 @@ public final class Result {
         this.duration = duration;
     }
 
+    public Result(int[][] matrix, long duration) {
+        this.resultMatrix = new Matrix(matrix);
+        this.duration = duration;
+    }
+
     public Matrix getMatrix() {
         return this.resultMatrix;
     }

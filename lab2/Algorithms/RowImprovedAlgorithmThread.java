@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import lab2.Models.Matrix;
 import lab2.Models.SubTask;
 
-public class RowImprovedAlgorithmThread implements Runnable {
+public final class RowImprovedAlgorithmThread implements Runnable {
     private final CopyOnWriteArrayList<SubTask> tasks;
     private final Matrix resultMatrix;
 

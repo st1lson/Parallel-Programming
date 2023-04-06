@@ -2,7 +2,7 @@ package lab2.Algorithms;
 
 import lab2.Models.Matrix;
 
-public class RowAlgorithmThread implements Runnable {
+public final class RowAlgorithmThread implements Runnable {
 
     private final int[] row;
     private final int[] column;

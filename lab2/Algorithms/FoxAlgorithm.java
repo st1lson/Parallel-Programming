@@ -8,7 +8,7 @@ import lab2.Interfaces.IAlgorithm;
 import lab2.Models.Matrix;
 import lab2.Models.Result;
 
-public class FoxAlgorithm implements IAlgorithm {
+public final class FoxAlgorithm implements IAlgorithm {
     private final Matrix firstMatrix;
     private final Matrix secondMatrix;
 
@@ -54,11 +54,6 @@ public class FoxAlgorithm implements IAlgorithm {
         int count = this.firstMatrix.getMatrix().length;
         int subMatrixSize = firstSplittedMatrixes[0][0].getRows();
         var resultMatrix = new Matrix[count][count];
-        for (int i = 0; i < count; i++) {
-            for (int j = 0; j < count; j++) {
-                resultMatrix[i][j] = new Matrix(subMatrixSize, subMatrixSize);
-            }
-        }
 
         for (int k = 0; k < count; k++) {
             var tasks = new ArrayList<Future<Matrix>>();
