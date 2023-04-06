@@ -51,7 +51,7 @@ public final class FoxAlgorithm implements IAlgorithm {
         var firstSplittedMatrixes = Matrix.splitMatrix(this.firstMatrix, threadsNumber);
         var secondSplittedMatrixes = Matrix.splitMatrix(this.secondMatrix, threadsNumber);
         
-        var matrixLength = this.firstMatrix.getMatrix().length;
+        var matrixLength = firstSplittedMatrixes.length;
         var subMatrixSize = firstSplittedMatrixes[0][0].getRows();
         var resultMatrix = initMatrix(matrixLength, subMatrixSize);
 
