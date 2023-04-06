@@ -54,9 +54,9 @@ public final class RowAlgorithm implements IAlgorithm {
         var columnsCount = this.secondMatrix.getColumns();
         var resultMatrix = new int[rowsCount][columnsCount];
 
-        for (int i = 0; i < rowsCount; i++) {
-            for (int j = 0; j < columnsCount; j++) {
-                for (int k = 0; k < rowsCount; k++) {
+        for (var i = 0; i < rowsCount; i++) {
+            for (var j = 0; j < columnsCount; j++) {
+                for (var k = 0; k < rowsCount; k++) {
                     resultMatrix[i][j] += this.firstMatrix.getMatrix()[i][k] * this.secondMatrix.getMatrix()[k][j];
                 }
             }

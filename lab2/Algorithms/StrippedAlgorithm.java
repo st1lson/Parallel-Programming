@@ -51,10 +51,10 @@ public final class StrippedAlgorithm implements IAlgorithm {
 
         executor.shutdown();
 
-        for (int i = 0; i < numberOfRows; i++) {
+        for (var i = 0; i < numberOfRows; i++) {
             var rowOffset = i * numberOfColumns;
 
-            for (int j = 0; j < numberOfColumns; j++) {
+            for (var j = 0; j < numberOfColumns; j++) {
                 try {
                     resultMatrix[i][j] = tasks.get(rowOffset + j).get();
                 } catch (Exception e) {

@@ -33,8 +33,8 @@ public final class RowImprovedAlgorithm implements IAlgorithm {
             var threadPool = Executors.newFixedThreadPool(numberOfThreads);
             var counter = 0;
             var tasks = new CopyOnWriteArrayList<SubTask>();
-            for (int i = 0; i < rowsCount; i++) {
-                for (int j = 0; j < columnsCount; j++) {
+            for (var i = 0; i < rowsCount; i++) {
+                for (var j = 0; j < columnsCount; j++) {
                     if (counter == ITEMS_PER_THREAD) {
                         threadPool.execute(new RowImprovedAlgorithmThread(tasks, resultMatrix));
                         tasks.clear();

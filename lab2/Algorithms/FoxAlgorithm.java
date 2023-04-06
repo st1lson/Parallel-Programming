@@ -51,26 +51,26 @@ public final class FoxAlgorithm implements IAlgorithm {
         var firstSplittedMatrixes = Matrix.splitMatrix(this.firstMatrix, threadsNumber);
         var secondSplittedMatrixes = Matrix.splitMatrix(this.secondMatrix, threadsNumber);
         
-        int count = this.firstMatrix.getMatrix().length;
-        int subMatrixSize = firstSplittedMatrixes[0][0].getRows();
-        var resultMatrix = new Matrix[count][count];
+        var matrixLength = this.firstMatrix.getMatrix().length;
+        var subMatrixSize = firstSplittedMatrixes[0][0].getRows();
+        var resultMatrix = initMatrix(matrixLength, subMatrixSize);
 
-        for (int k = 0; k < count; k++) {
+        for (var k = 0; k < matrixLength; k++) {
             var tasks = new ArrayList<Future<Matrix>>();
-            for (int i = 0; i < count; i++) {
-                for (int j = 0; j < count; j++) {
-                    tasks.add(threadPool.submit(new FoxAlgorithmThread(firstSplittedMatrixes[i][(i + k) % count], secondSplittedMatrixes[(i + k) % count][j], resultMatrix[i][j])));
+            for (var i = 0; i < matrixLength; i++) {
+                var offset = (i + k) % matrixLength;
+
+                for (var j = 0; j < matrixLength; j++) {
+                    tasks.add(threadPool.submit(new FoxAlgorithmThread(firstSplittedMatrixes[i][offset], secondSplittedMatrixes[offset][j], resultMatrix[i][j])));
                 }
             }
 
-            for (int i = 0; i < count; i++) {
-                for (int j = 0; j < count; j++) {
-                    try {
-                        if (resultMatrix[i][j] == null) {
-                            resultMatrix[i][j] = new Matrix(subMatrixSize, subMatrixSize);
-                        }
+            for (var i = 0; i < matrixLength; i++) {
+                var offset = i * matrixLength;
 
-                        resultMatrix[i][j] = tasks.get(i * count + j).get();
+                for (var j = 0; j < matrixLength; j++) {
+                    try {
+                        resultMatrix[i][j] = tasks.get(offset + j).get();
                     } catch (Exception e) {
                     }
                 }
@@ -78,7 +78,12 @@ public final class FoxAlgorithm implements IAlgorithm {
         }
 
         var endTime = System.currentTimeMillis();
-        var result = new Result(new Matrix(resultMatrix, this.firstMatrix.getRows(), this.secondMatrix.getColumns()), endTime - startTime);
+        var result = new Result(
+            new Matrix(
+                resultMatrix,
+                this.firstMatrix.getRows(),
+                this.secondMatrix.getColumns()),
+            endTime - startTime);
 
         return result;
     }
@@ -86,5 +91,16 @@ public final class FoxAlgorithm implements IAlgorithm {
     @Override
     public Result solve() {
         throw new UnsupportedOperationException();
+    }
+
+    private static Matrix[][] initMatrix(int matrixLength, int subMatrixSize) {
+        var matrix = new Matrix[matrixLength][matrixLength];
+        for (var i = 0; i < matrixLength; i++) {
+            for (var j = 0; j < matrixLength; j++) {
+                matrix[i][j] = new Matrix(subMatrixSize, subMatrixSize);
+            }
+        }
+
+        return matrix;
     }
 }

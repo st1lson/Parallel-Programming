@@ -17,10 +17,10 @@ public final class FoxAlgorithmThread implements Callable<Matrix> {
 
     @Override
     public Matrix call() {
-        for (int i = 0; i < this.firstMatrix.getRows(); i++) {
-            for (int j = 0; j < this.secondMatrix.getColumns(); j++) {
-                int result = 0;
-                for (int k = 0; k < this.firstMatrix.getColumns(); k++) {
+        for (var i = 0; i < this.firstMatrix.getRows(); i++) {
+            for (var j = 0; j < this.secondMatrix.getColumns(); j++) {
+                var result = 0;
+                for (var k = 0; k < this.firstMatrix.getColumns(); k++) {
                     result += this.firstMatrix.getMatrix()[i][k] * this.secondMatrix.getMatrix()[k][j];
                 }
 

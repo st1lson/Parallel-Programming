@@ -18,7 +18,7 @@ public final class RowImprovedAlgorithmThread implements Runnable {
     public void run() {
         for (SubTask task : this.tasks) {
             var result = 0;
-            for (int i = 0; i < task.getRow().length; i++) {
+            for (var i = 0; i < task.getRow().length; i++) {
                 result += task.getRow()[i] * task.getColumn()[i];
             }
             

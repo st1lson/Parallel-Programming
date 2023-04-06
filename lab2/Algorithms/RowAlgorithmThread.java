@@ -25,7 +25,7 @@ public final class RowAlgorithmThread implements Runnable {
     @Override
     public void run() {
         var result = 0;
-        for (int i = 0; i < this.row.length; i++) {
+        for (var i = 0; i < this.row.length; i++) {
             result += this.row[i] * this.column[i];
         }
         

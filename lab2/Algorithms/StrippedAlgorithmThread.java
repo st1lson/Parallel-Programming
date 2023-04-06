@@ -15,7 +15,7 @@ public final class StrippedAlgorithmThread implements Callable<Integer> {
     @Override
     public Integer call() {
         var result = 0;
-        for (int i = 0; i < this.row.length; i++) {
+        for (var i = 0; i < this.row.length; i++) {
             result += this.row[i] * this.column[i];
         }
 
