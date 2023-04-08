@@ -35,7 +35,7 @@ public class Program {
 
         var teacher = new Thread(new Teacher(journal));
         var assistants = new ArrayList<Thread>();
-        for (int i = 0; i < ASSISTANTS_COUNT; i++) {
+        for (var i = 0; i < ASSISTANTS_COUNT; i++) {
             assistants.add(new Thread(new Teacher(journal)));
         }
 
@@ -59,15 +59,15 @@ public class Program {
                 System.out.println(String.format(
                         "Student %s, Grades: %s",
                         student.getName(),
-                        String.join(", ", toStringArray(student.getGrades()))));
+                        String.join(", ", toStringArray(student.getGrades())))
+                    );
             }
         }
     }
 
     private static String[] toStringArray(ArrayList<Integer> integers) {
         var strArray = new String[integers.size()];
-
-        for (int i = 0; i < integers.size(); i++) {
+        for (var i = 0; i < integers.size(); i++) {
             strArray[i] = String.valueOf(integers.get(i));
         }
 
