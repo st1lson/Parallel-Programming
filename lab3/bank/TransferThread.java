@@ -1,4 +1,4 @@
-package lab3.task1;
+package lab3.bank;
 
 public class TransferThread extends Thread {
     private Bank bank;

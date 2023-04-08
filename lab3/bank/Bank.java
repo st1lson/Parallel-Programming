@@ -1,4 +1,4 @@
-package lab3.task1;
+package lab3.bank;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
