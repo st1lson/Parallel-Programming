@@ -22,8 +22,9 @@ public class Bank {
         accounts[from] -= amount;
         accounts[to] += amount;
         ntransacts++;
-        if (ntransacts % NTEST == 0)
+        if (ntransacts % NTEST == 0) {
             test();
+        }
     }
 
     public synchronized void syncTransfer(int from, int to, int amount) {
@@ -55,6 +56,7 @@ public class Bank {
         }
 
         transfer(from, to, amount);
+        notifyAll();
     }
 
     public void test() {
