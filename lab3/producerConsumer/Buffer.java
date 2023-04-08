@@ -31,7 +31,6 @@ public final class Buffer {
             ++count;
             notEmpty.signal();
         } finally {
-            printCount();
             locker.unlock();
         }
     }
@@ -53,12 +52,7 @@ public final class Buffer {
 
             return x;
         } finally {
-            printCount();
             locker.unlock();
         }
-    }
-
-    private final void printCount() {
-        System.out.println(String.format("Buffer's count: %s", count));
     }
 }
