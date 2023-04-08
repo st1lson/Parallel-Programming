@@ -4,7 +4,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Buffer {
+public final class Buffer {
     private final Lock locker = new ReentrantLock();
     private final Condition notFull = locker.newCondition();
     private final Condition notEmpty = locker.newCondition();
@@ -15,7 +15,7 @@ public class Buffer {
     private int takePtr;
     private int putPtr;
 
-    public void put(Object x)
+    public final void put(Object x)
             throws InterruptedException {
         locker.lock();
         try {
@@ -36,7 +36,7 @@ public class Buffer {
         }
     }
 
-    public Object take() throws InterruptedException {
+    public final Object take() throws InterruptedException {
         locker.lock();
         try {
             while (count == 0) {
@@ -58,7 +58,7 @@ public class Buffer {
         }
     }
 
-    private void printCount() {
+    private final void printCount() {
         System.out.println(String.format("Buffer's count: %s", count));
     }
 }

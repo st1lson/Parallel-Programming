@@ -10,12 +10,12 @@ public class Program {
         var buffer = new Buffer();
 
         var producers = new ArrayList<Thread>();
-        for (int i = 0; i < NUMBER_OF_WORKERS; i++) {
+        for (var i = 0; i < NUMBER_OF_WORKERS; i++) {
             producers.add(new Thread(new Producer(buffer, ITERATIONS)));
         }
 
         var consumers = new ArrayList<Thread>();
-        for (int i = 0; i < NUMBER_OF_WORKERS; i++) {
+        for (var i = 0; i < NUMBER_OF_WORKERS; i++) {
             consumers.add(new Thread(new Consumer(buffer, ITERATIONS)));
         }
 
