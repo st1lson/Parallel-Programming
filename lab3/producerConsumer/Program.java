@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Program {
     private static final int ITERATIONS = 2500;
-    private static final int NUMBER_OF_WORKERS = 5;
+    private static final int NUMBER_OF_WORKERS = 2;
 
     public static void main(String[] args) {
         var buffer = new Buffer();

@@ -15,7 +15,7 @@ public class Producer implements Runnable {
             for (var i = 0; i < iterations; i++) {
                 var value = Math.random();
                 buffer.put(value);
-                System.out.println(String.format("The value %s has been added to the buffer", value));   
+                System.out.println(String.format("\nThread #%s\nThe value %s has been added to the buffer\n", Thread.currentThread().getId(), value));   
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
