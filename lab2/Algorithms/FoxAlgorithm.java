@@ -17,39 +17,40 @@ public final class FoxAlgorithm implements IAlgorithm {
         this.secondMatrix = secondMatrix;
     }
 
-    private int findNumberOfThreads(int threadsNumber, int rows) {
-        var numberOfThreads = Math.min(threadsNumber, this.firstMatrix.getRows());
-        numberOfThreads = Math.min(numberOfThreads, this.firstMatrix.getRows());
+    private int findNumberOfSubMatrixes(int threadsNumber, int rows) {
+        var numberOfSubMatrixes = Math.min(threadsNumber, this.firstMatrix.getRows());
         
-        var i = numberOfThreads;
+        var i = numberOfSubMatrixes;
         while (i > 1) {
             if (rows % i == 0) {
                 break;
             }
 
-            if (i >= numberOfThreads) {
+            if (i >= numberOfSubMatrixes) {
                 i++;
             } else {
                 i--;
             }
 
             if (i > Math.sqrt(rows)) {
-                i = Math.min(numberOfThreads, rows / numberOfThreads) - 1;
+                i = Math.min(numberOfSubMatrixes, rows / numberOfSubMatrixes) - 1;
             }
         }
 
-        return i >= numberOfThreads ? i : i != 0 ? rows / i : rows;
+        return i >= numberOfSubMatrixes
+            ? i
+            : i != 0 ? rows / i : rows;
     }
 
     @Override
     public Result solve(int threadsNumber) {
         var startTime = System.currentTimeMillis();
 
-        var numberOfThreads = findNumberOfThreads(threadsNumber, firstMatrix.getRows());
-        var threadPool = Executors.newFixedThreadPool(numberOfThreads);
+        var numberOfSubMatrixes = findNumberOfSubMatrixes(threadsNumber, firstMatrix.getRows());
+        var threadPool = Executors.newFixedThreadPool(threadsNumber);
 
-        var firstSplittedMatrixes = Matrix.splitMatrix(this.firstMatrix, threadsNumber);
-        var secondSplittedMatrixes = Matrix.splitMatrix(this.secondMatrix, threadsNumber);
+        var firstSplittedMatrixes = Matrix.splitMatrix(this.firstMatrix, numberOfSubMatrixes);
+        var secondSplittedMatrixes = Matrix.splitMatrix(this.secondMatrix, numberOfSubMatrixes);
         
         var matrixLength = firstSplittedMatrixes.length;
         var subMatrixSize = firstSplittedMatrixes[0][0].getRows();
