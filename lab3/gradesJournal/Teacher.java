@@ -15,7 +15,7 @@ public class Teacher implements Runnable {
         var random = new Random();
         for (var group : journal.getGroups()) {
             for (var student : group.getStudents()) {
-                var grade = random.nextInt(100);
+                var grade = random.nextInt(101);
                 journal.addGrade(student, grade);
             }
         }

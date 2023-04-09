@@ -19,7 +19,7 @@ public class Student {
     }
 
     public void addGrade(int grade) {
-        if (grade < 0 || grade > 100) return;
+        if (grade <= 0 || grade > 100) return;
 
         grades.add(grade);
     }
