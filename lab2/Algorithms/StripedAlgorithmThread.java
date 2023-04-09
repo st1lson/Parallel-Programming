@@ -2,12 +2,12 @@ package lab2.Algorithms;
 
 import java.util.concurrent.Callable;
 
-public final class StrippedAlgorithmThread implements Callable<Integer> {
+public final class StripedAlgorithmThread implements Callable<Integer> {
 
     private final int[] row;
     private final int[] column;
 
-    public StrippedAlgorithmThread(int[] row, int[] column) {
+    public StripedAlgorithmThread(int[] row, int[] column) {
         this.row = row;
         this.column = column;
     }
