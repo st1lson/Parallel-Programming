@@ -14,7 +14,7 @@ public class Consumer implements Runnable {
         try {
             for (var i = 0; i < iterations; i++) {
                 var value = (double)buffer.take();
-                System.out.println(String.format("Thread #%s\nThe value %s has been removed to the buffer\n", Thread.currentThread().getId(), value));   
+                System.out.println(String.format("Thread #%s\nThe value %s has been removed to the buffer\n", Thread.currentThread().threadId(), value));   
             }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

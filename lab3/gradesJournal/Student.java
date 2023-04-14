@@ -1,10 +1,12 @@
 package lab3.gradesJournal;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Student {
     private final String name;
-    private final ArrayList<Integer> grades = new ArrayList<>();
+    private final List<Integer> grades = Collections.synchronizedList(new ArrayList<>());
 
     public Student(String name) {
         this.name = name;
@@ -14,7 +16,7 @@ public class Student {
         return name;
     }
 
-    public ArrayList<Integer> getGrades() {
+    public List<Integer> getGrades() {
         return grades;
     }
 

@@ -7,14 +7,14 @@ import lab2.Models.Matrix;
 
 public class Program {
     public static void main(String[] args) {
-        var firstMatrix = new Matrix(2500, 2500, 1);
-        var secondMatrix = new Matrix(2500, 2500, 10);
+        var firstMatrix = new Matrix(1500, 1500, 1);
+        var secondMatrix = new Matrix(1500, 1500, 10);
 
         var processors = Runtime.getRuntime().availableProcessors();
 
         var rowAlgorithm = new RowAlgorithm(firstMatrix, secondMatrix);
 
-        var parallelRowResult = rowAlgorithm.solve(processors);
+        var rowResult = rowAlgorithm.solve();
 
         var stripedAlgorithm = new StripedAlgorithm(firstMatrix, secondMatrix);
 
@@ -24,8 +24,11 @@ public class Program {
 
         var parallelFoxResult = foxAlgorithm.solve(processors);
 
-        System.out.println(String.format("Parallel row algorithm: %s", parallelRowResult));
+        System.out.println(String.format("Row algorithm: %s", rowResult));
         System.out.println(String.format("Parallel striped algorithm: %s", parallelStripedResult));
         System.out.println(String.format("Parallel Fox algorithm: %s", parallelFoxResult));
+
+        System.out.println(String.format("Striped correct: %s", rowResult.getMatrix().equals(parallelStripedResult.getMatrix())));
+        System.out.println(String.format("Fox correct: %s", rowResult.getMatrix().equals(parallelFoxResult.getMatrix())));
     }
 }

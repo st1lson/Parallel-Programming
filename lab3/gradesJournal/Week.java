@@ -1,6 +1,7 @@
 package lab3.gradesJournal;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Week implements Runnable {
 
@@ -64,10 +65,10 @@ public class Week implements Runnable {
         }
     }
 
-    private static String[] toStringArray(ArrayList<Integer> integers) {
-        var strArray = new String[integers.size()];
-        for (var i = 0; i < integers.size(); i++) {
-            strArray[i] = String.valueOf(integers.get(i));
+    private static String[] toStringArray(List<Integer> list) {
+        var strArray = new String[list.size()];
+        for (var i = 0; i < list.size(); i++) {
+            strArray[i] = String.valueOf(list.get(i));
         }
 
         return strArray;
