@@ -33,7 +33,7 @@ public class PrintThread extends Thread {
     private void printSync() {
         synchronized (locker) {
             try {
-                long threadId = Thread.currentThread().getId();
+                final long threadId = Thread.currentThread().threadId();
                 while (PrintThread.previousThread == threadId) {
                     locker.wait();
                 }

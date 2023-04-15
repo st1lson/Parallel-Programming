@@ -9,12 +9,12 @@ import lab2.Interfaces.IAlgorithm;
 import lab2.Models.Matrix;
 import lab2.Models.Result;
 
-public final class StrippedAlgorithm implements IAlgorithm {
+public final class StripedAlgorithm implements IAlgorithm {
 
     private final Matrix firstMatrix;
     private final Matrix secondMatrix;
 
-    public StrippedAlgorithm(Matrix firstMatrix, Matrix secondMatrix) {
+    public StripedAlgorithm(Matrix firstMatrix, Matrix secondMatrix) {
         this.firstMatrix = firstMatrix;
         this.secondMatrix = secondMatrix;
     }
@@ -38,12 +38,8 @@ public final class StrippedAlgorithm implements IAlgorithm {
         for (var i = 0; i < numberOfRows; i++) {
             var iterationTasks = new ArrayList<Callable<Integer>>();
             for (var j = 0; j < numberOfColumns; j++) {
-<<<<<<< Updated upstream:lab2/Algorithms/StrippedAlgorithm.java
-                iterationTasks.add(new StrippedAlgorithmThread(rows.getMatrix()[i], columns.getMatrix()[j]));
-=======
                 var rowIndex = (j + i) % numberOfRows;
                 iterationTasks.add(new StripedAlgorithmThread(rows.getMatrix()[rowIndex], columns.getMatrix()[j]));
->>>>>>> Stashed changes:lab2/Algorithms/StripedAlgorithm.java
             }
 
             try {

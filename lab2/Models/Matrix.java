@@ -160,4 +160,20 @@ public final class Matrix {
 
         return builder.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        var matrix = (Matrix)obj;
+        if (matrix == null) return false;
+
+        var anotherItems = matrix.getMatrix();
+        for (int i = 0; i < items.length; i++) {
+            for (int j = 0; j < items[0].length; j++) {
+                if (items[i][j] != anotherItems[i][j])
+                    return false;
+            }
+        }
+
+        return true;
+    }
 }
