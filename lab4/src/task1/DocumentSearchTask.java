@@ -1,5 +1,7 @@
 package task1;
 
+import common.Document;
+
 import java.util.Map;
 import java.util.concurrent.RecursiveTask;
 
@@ -13,15 +15,6 @@ public class DocumentSearchTask extends RecursiveTask<Map<Integer, Integer>> {
 
     @Override
     protected Map<Integer, Integer> compute() {
-        return CounterHelper.crateDocumentMap(document);
-    }
-
-    private Long occurrencesCount(Document document) {
-        var count = 0L;
-        for (var line : document.lines()) {
-            count += CounterHelper.wordsIn(line).length;
-        }
-
-        return count;
+        return CounterHelper.createDocumentMap(document);
     }
 }

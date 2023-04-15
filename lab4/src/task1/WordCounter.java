@@ -1,5 +1,7 @@
 package task1;
 
+import common.Folder;
+
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 

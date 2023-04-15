@@ -1,4 +1,4 @@
-package task1;
+package common;
 
 import java.io.File;
 import java.io.IOException;

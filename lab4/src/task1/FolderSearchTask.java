@@ -1,5 +1,7 @@
 package task1;
 
+import common.Folder;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +32,10 @@ public class FolderSearchTask extends RecursiveTask<Map<Integer, Integer>> {
         }
 
         for (var task : forks) {
-            map.putAll(task.join());
+            var newMap = task.join();
+            for (var key : newMap.keySet()) {
+                map.merge(key, newMap.get(key), Integer::sum);
+            }
         }
 
         return map;

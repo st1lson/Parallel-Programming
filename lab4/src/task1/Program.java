@@ -1,21 +1,25 @@
 package task1;
 
+import common.Folder;
+
 import java.io.File;
 import java.io.IOException;
 
 public class Program {
     public static void main(String[] args) throws IOException {
-        var file = new File("");
+        var filesPath = new File("src/files").getAbsolutePath();
+        var file = new File(filesPath);
         var folder = Folder.fromDirectory(file);
 
         var wordCounter = new WordCounter();
         var map = wordCounter.countOccurrencesInParallel(folder);
-        System.out.println("===== ITEMS");
+
+        System.out.println("===== ITEMS =====");
         for (var item : map.entrySet()) {
             System.out.printf("%s: %s%n", item.getKey(), item.getValue());
         }
-        System.out.println("===== STATISTICS");
 
+        System.out.println("===== STATISTICS =====");
         var totalWords = 0d;
         var wordsCount = 0;
         for (var item : map.entrySet()) {

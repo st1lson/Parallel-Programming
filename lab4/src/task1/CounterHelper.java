@@ -1,5 +1,7 @@
 package task1;
 
+import common.Document;
+
 import java.util.HashMap;
 
 public final class CounterHelper {
@@ -11,7 +13,7 @@ public final class CounterHelper {
         return line.trim().split("(\\s|\\p{Punct})+");
     }
 
-    public static HashMap<Integer, Integer> crateDocumentMap(Document document) {
+    public static HashMap<Integer, Integer> createDocumentMap(Document document) {
         var map = new HashMap<Integer, Integer>();
         for (var line : document.lines()) {
             for (var word : wordsIn(line)) {
