@@ -2,8 +2,6 @@ package task3;
 
 import common.Document;
 
-import java.util.Dictionary;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
