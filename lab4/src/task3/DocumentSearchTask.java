@@ -2,7 +2,6 @@ package task3;
 
 import common.Document;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.RecursiveTask;
 

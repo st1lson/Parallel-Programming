@@ -2,7 +2,9 @@ package task3;
 
 import common.Folder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.RecursiveTask;
 
 public class FolderSearchTask extends RecursiveTask<Set<String>> {

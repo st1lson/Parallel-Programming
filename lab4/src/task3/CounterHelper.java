@@ -17,8 +17,8 @@ public final class CounterHelper {
 
     public static Set<String> getUniqueWords(Document document) {
         var set = new HashSet<String>();
-        for(var line : document.lines()) {
-            for(var word : wordsIn(line)) {
+        for (var line : document.lines()) {
+            for (var word : wordsIn(line)) {
                 if (word.length() == 0) continue;
 
                 set.add(word.toLowerCase());
