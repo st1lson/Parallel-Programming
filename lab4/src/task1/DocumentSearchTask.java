@@ -1,34 +1,27 @@
 package task1;
 
+import java.util.Map;
 import java.util.concurrent.RecursiveTask;
 
-public class DocumentSearchTask extends RecursiveTask<Long> {
+public class DocumentSearchTask extends RecursiveTask<Map<Integer, Integer>> {
     private final Document document;
-    private final String searchedWord;
 
-    DocumentSearchTask(Document document, String searchedWord) {
+    DocumentSearchTask(Document document) {
         super();
         this.document = document;
-        this.searchedWord = searchedWord;
     }
 
     @Override
-    protected Long compute() {
-        return occurrencesCount(document);
-    }
-
-    private String[] wordsIn(String line) {
-        return line.trim().split("(\\s|\\p{Punct})+");
+    protected Map<Integer, Integer> compute() {
+        return CounterHelper.crateDocumentMap(document);
     }
 
     private Long occurrencesCount(Document document) {
-        long count = 0;
-        for (String line : document.lines()) {
-            for (String word : wordsIn(line)) {
-                count++;
-            }
+        var count = 0L;
+        for (var line : document.lines()) {
+            count += CounterHelper.wordsIn(line).length;
         }
+
         return count;
     }
-
 }

@@ -4,19 +4,19 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 
-public record Document(List<String> lines) {
+public record Document(ArrayList<String> lines) {
     static Document fromFile(File file) throws IOException {
-        List<String> lines = new LinkedList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line = reader.readLine();
+        var lines = new ArrayList<String>();
+        try (var reader = new BufferedReader(new FileReader(file))) {
+            var line = reader.readLine();
             while (line != null) {
                 lines.add(line);
                 line = reader.readLine();
             }
         }
+
         return new Document(lines);
     }
 }

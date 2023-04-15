@@ -1,39 +1,38 @@
 package task1;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.RecursiveTask;
 
-public class FolderSearchTask extends RecursiveTask<Long> {
+public class FolderSearchTask extends RecursiveTask<Map<Integer, Integer>> {
     private final Folder folder;
-    private final String searchedWord;
 
-    FolderSearchTask(Folder folder, String searchedWord) {
+    FolderSearchTask(Folder folder) {
         super();
         this.folder = folder;
-        this.searchedWord = searchedWord;
     }
 
     @Override
-    protected Long compute() {
-        long count = 0L;
-        List<RecursiveTask<Long>> forks = new LinkedList<>();
-        for (Folder subFolder : folder.subFolders()) {
-            FolderSearchTask task = new FolderSearchTask(subFolder, searchedWord);
+    protected Map<Integer, Integer> compute() {
+        var map = new HashMap<Integer, Integer>();
+        var forks = new ArrayList<RecursiveTask<Map<Integer, Integer>>>();
+        for (var subFolder : folder.subFolders()) {
+            var task = new FolderSearchTask(subFolder);
             forks.add(task);
             task.fork();
         }
 
-        for (Document document : folder.documents()) {
-            DocumentSearchTask task = new DocumentSearchTask(document, searchedWord);
+        for (var document : folder.documents()) {
+            var task = new DocumentSearchTask(document);
             forks.add(task);
             task.fork();
         }
 
-        for (RecursiveTask<Long> task : forks) {
-            count = count + task.join();
+        for (var task : forks) {
+            map.putAll(task.join());
         }
 
-        return count;
+        return map;
     }
 }

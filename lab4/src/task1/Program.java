@@ -8,8 +8,10 @@ public class Program {
         var file = new File("C:\\Users\\38093\\Downloads\\Telegram Desktop\\text");
         var folder = Folder.fromDirectory(file);
 
-        WordCounter wordCounter = new WordCounter();
-        var totalCount = wordCounter.countOccurrencesInParallel(folder, "");
-        System.out.println(totalCount);
+        var wordCounter = new WordCounter();
+        var map = wordCounter.countOccurrencesInParallel(folder);
+        for (var item : map.keySet()) {
+            System.out.printf("%s: %s%n", item, map.get(item));
+        }
     }
 }
