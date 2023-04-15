@@ -1,7 +1,7 @@
 package task1;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool;
 
 public class WordCounter {
     private final ForkJoinPool forkJoinPool = new ForkJoinPool();

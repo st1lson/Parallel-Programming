@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public record Document(ArrayList<String> lines) {
-    static Document fromFile(File file) throws IOException {
+    public static Document fromFile(File file) throws IOException {
         var lines = new ArrayList<String>();
         try (var reader = new BufferedReader(new FileReader(file))) {
             var line = reader.readLine();

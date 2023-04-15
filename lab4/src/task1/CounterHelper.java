@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 public final class CounterHelper {
 
-    private CounterHelper() { }
+    private CounterHelper() {
+    }
 
     public static String[] wordsIn(String line) {
         return line.trim().split("(\\s|\\p{Punct})+");

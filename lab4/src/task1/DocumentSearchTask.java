@@ -6,7 +6,7 @@ import java.util.concurrent.RecursiveTask;
 public class DocumentSearchTask extends RecursiveTask<Map<Integer, Integer>> {
     private final Document document;
 
-    DocumentSearchTask(Document document) {
+    public DocumentSearchTask(Document document) {
         super();
         this.document = document;
     }

@@ -8,7 +8,7 @@ import java.util.concurrent.RecursiveTask;
 public class FolderSearchTask extends RecursiveTask<Map<Integer, Integer>> {
     private final Folder folder;
 
-    FolderSearchTask(Folder folder) {
+    public FolderSearchTask(Folder folder) {
         super();
         this.folder = folder;
     }

@@ -5,13 +5,35 @@ import java.io.IOException;
 
 public class Program {
     public static void main(String[] args) throws IOException {
-        var file = new File("C:\\Users\\38093\\Downloads\\Telegram Desktop\\text");
+        var file = new File("");
         var folder = Folder.fromDirectory(file);
 
         var wordCounter = new WordCounter();
         var map = wordCounter.countOccurrencesInParallel(folder);
-        for (var item : map.keySet()) {
-            System.out.printf("%s: %s%n", item, map.get(item));
+        System.out.println("===== ITEMS");
+        for (var item : map.entrySet()) {
+            System.out.printf("%s: %s%n", item.getKey(), item.getValue());
         }
+        System.out.println("===== STATISTICS");
+
+        var totalWords = 0d;
+        var wordsCount = 0;
+        for (var item : map.entrySet()) {
+            totalWords += (item.getKey() * item.getValue());
+            wordsCount += item.getValue();
+        }
+        var mean = Math.round(totalWords / wordsCount);
+
+        var sum = 0d;
+        for (var item : map.entrySet()) {
+            sum += (Math.pow(item.getKey(), 2) * item.getValue());
+        }
+
+        var D = Math.round(sum / wordsCount - Math.pow(mean, 2));
+        var standardDeviation = Math.round(Math.sqrt(D));
+
+        System.out.printf("Mean length: %s%n", mean);
+        System.out.printf("D: %s%n", D);
+        System.out.printf("Standard deviation: %s%n", standardDeviation);
     }
 }
