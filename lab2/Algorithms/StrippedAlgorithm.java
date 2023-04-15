@@ -38,7 +38,12 @@ public final class StrippedAlgorithm implements IAlgorithm {
         for (var i = 0; i < numberOfRows; i++) {
             var iterationTasks = new ArrayList<Callable<Integer>>();
             for (var j = 0; j < numberOfColumns; j++) {
+<<<<<<< Updated upstream:lab2/Algorithms/StrippedAlgorithm.java
                 iterationTasks.add(new StrippedAlgorithmThread(rows.getMatrix()[i], columns.getMatrix()[j]));
+=======
+                var rowIndex = (j + i) % numberOfRows;
+                iterationTasks.add(new StripedAlgorithmThread(rows.getMatrix()[rowIndex], columns.getMatrix()[j]));
+>>>>>>> Stashed changes:lab2/Algorithms/StripedAlgorithm.java
             }
 
             try {
@@ -56,7 +61,8 @@ public final class StrippedAlgorithm implements IAlgorithm {
 
             for (var j = 0; j < numberOfColumns; j++) {
                 try {
-                    resultMatrix[i][j] = tasks.get(rowOffset + j).get();
+                    var rowIndex = (j + i) % numberOfRows;
+                    resultMatrix[rowIndex][j] = tasks.get(rowOffset + j).get();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
