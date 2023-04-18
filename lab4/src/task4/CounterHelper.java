@@ -2,10 +2,7 @@ package task4;
 
 import common.Document;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class CounterHelper {
 
@@ -17,12 +14,9 @@ public final class CounterHelper {
     }
 
 
-    public static Map<String, ArrayList<Occurrence>> findOccurrences(Document document, String... wordsToSearch) {
-        var dictionary = new HashMap<String, ArrayList<Occurrence>>();
+    public static List<Occurrence> findOccurrences(Document document, String... wordsToSearch) {
+        var occurrences = new ArrayList<Occurrence>();
         var enumerable = Arrays.asList(wordsToSearch);
-        for (var word : enumerable) {
-            dictionary.put(word, new ArrayList<>());
-        }
 
         ArrayList<String> lines = document.lines();
         for (int i = 0; i < lines.size(); i++) {
@@ -31,11 +25,10 @@ public final class CounterHelper {
                 var formattedWord = word.toLowerCase();
                 if (enumerable.stream().noneMatch(formattedWord::equalsIgnoreCase)) continue;
 
-                var array = dictionary.get(formattedWord);
-                array.add(new Occurrence(document.fileName(), formattedWord, i));
+                occurrences.add(new Occurrence(document.fileName(), formattedWord, i));
             }
         }
 
-        return dictionary;
+        return occurrences;
     }
 }

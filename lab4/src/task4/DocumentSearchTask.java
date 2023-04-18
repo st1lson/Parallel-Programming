@@ -2,11 +2,10 @@ package task4;
 
 import common.Document;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-public class DocumentSearchTask extends RecursiveTask<Map<String, ArrayList<Occurrence>>> {
+public class DocumentSearchTask extends RecursiveTask<List<Occurrence>> {
     private final Document document;
     private final String[] wordsToFind;
 
@@ -17,7 +16,7 @@ public class DocumentSearchTask extends RecursiveTask<Map<String, ArrayList<Occu
     }
 
     @Override
-    protected Map<String, ArrayList<Occurrence>> compute() {
+    protected List<Occurrence> compute() {
         return CounterHelper.findOccurrences(document, wordsToFind);
     }
 }

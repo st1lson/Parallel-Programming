@@ -4,6 +4,11 @@ import common.Folder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Program {
     private final static String[] wordsToSearch = {"hello", "world"};
@@ -14,18 +19,29 @@ public class Program {
         var folder = Folder.fromDirectory(file);
 
         var wordCounter = new WordCounter();
-        var result = wordCounter.countOccurrencesInParallel(folder, wordsToSearch);
+        var occurrences = wordCounter.countOccurrencesInParallel(folder, wordsToSearch);
 
         var builder = new StringBuilder();
-        var totalOccurrences = 0;
-        for (var occurrences : result.entrySet()) {
-            for (var occurrence : occurrences.getValue()) {
-                builder.append(occurrence);
-                totalOccurrences++;
-            }
+        for (var occurrence : occurrences) {
+            builder.append(occurrence);
         }
 
         System.out.println(builder);
-        System.out.printf("Total occurrences: %s%n", totalOccurrences);
+        System.out.printf("Total occurrences: %s%n", occurrences.size());
+
+//        for (var word : wordsToSearch) {
+//            var wordMatches = occurrences.stream()
+//                    .filter(occurrence -> Objects.equals(occurrence.word(), word));
+//
+//            System.out.printf("The word %s was found in the following files:%n", word);
+//            for (var fileName : wordMatches.filter(distinctByKey(Occurrence::file)).map(Occurrence::file).toList()) {
+//                System.out.println(fileName);
+//            }
+//        }
+    }
+
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 }

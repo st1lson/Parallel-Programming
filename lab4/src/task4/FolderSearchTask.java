@@ -3,11 +3,10 @@ package task4;
 import common.Folder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-public class FolderSearchTask extends RecursiveTask<Map<String, ArrayList<Occurrence>>> {
+public class FolderSearchTask extends RecursiveTask<List<Occurrence>> {
     private final Folder folder;
     private final String[] wordsToFind;
 
@@ -18,9 +17,9 @@ public class FolderSearchTask extends RecursiveTask<Map<String, ArrayList<Occurr
     }
 
     @Override
-    protected Map<String, ArrayList<Occurrence>> compute() {
-        var dictionary = new HashMap<String, ArrayList<Occurrence>>();
-        var forks = new ArrayList<RecursiveTask<Map<String, ArrayList<Occurrence>>>>();
+    protected List<Occurrence> compute() {
+        var occurrences = new ArrayList<Occurrence>();
+        var forks = new ArrayList<RecursiveTask<List<Occurrence>>>();
         for (var subFolder : folder.subFolders()) {
             var task = new FolderSearchTask(subFolder, wordsToFind);
             forks.add(task);
@@ -34,9 +33,9 @@ public class FolderSearchTask extends RecursiveTask<Map<String, ArrayList<Occurr
         }
 
         for (var fork : forks) {
-            dictionary.putAll(fork.join());
+            occurrences.addAll(fork.join());
         }
 
-        return dictionary;
+        return occurrences;
     }
 }
