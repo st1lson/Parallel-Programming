@@ -20,13 +20,13 @@ public class Program {
         }
 
         System.out.println("===== STATISTICS =====");
-        var totalWords = 0d;
+        var letters = 0d;
         var wordsCount = 0;
         for (var item : map.entrySet()) {
-            totalWords += (item.getKey() * item.getValue());
+            letters += (item.getKey() * item.getValue());
             wordsCount += item.getValue();
         }
-        var mean = totalWords / wordsCount;
+        var mean = letters / wordsCount;
 
         var sum = 0d;
         for (var item : map.entrySet()) {
