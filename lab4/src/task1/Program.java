@@ -26,15 +26,15 @@ public class Program {
             totalWords += (item.getKey() * item.getValue());
             wordsCount += item.getValue();
         }
-        var mean = Math.round(totalWords / wordsCount);
+        var mean = totalWords / wordsCount;
 
         var sum = 0d;
         for (var item : map.entrySet()) {
             sum += (Math.pow(item.getKey(), 2) * item.getValue());
         }
 
-        var D = Math.round(sum / wordsCount - Math.pow(mean, 2));
-        var standardDeviation = Math.round(Math.sqrt(D));
+        var D =sum / wordsCount - Math.pow(mean, 2);
+        var standardDeviation = Math.sqrt(D);
 
         System.out.printf("Mean length: %s%n", mean);
         System.out.printf("D: %s%n", D);
