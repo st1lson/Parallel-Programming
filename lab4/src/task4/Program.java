@@ -29,15 +29,15 @@ public class Program {
         System.out.println(builder);
         System.out.printf("Total occurrences: %s%n", occurrences.size());
 
-//        for (var word : wordsToSearch) {
-//            var wordMatches = occurrences.stream()
-//                    .filter(occurrence -> Objects.equals(occurrence.word(), word));
-//
-//            System.out.printf("The word %s was found in the following files:%n", word);
-//            for (var fileName : wordMatches.filter(distinctByKey(Occurrence::file)).map(Occurrence::file).toList()) {
-//                System.out.println(fileName);
-//            }
-//        }
+        for (var word : wordsToSearch) {
+            var wordMatches = occurrences.stream()
+                    .filter(occurrence -> Objects.equals(occurrence.word(), word));
+
+            System.out.printf("The word %s was found in the following files:%n", word);
+            for (var fileName : wordMatches.filter(distinctByKey(Occurrence::file)).map(Occurrence::file).toList()) {
+                System.out.println(fileName);
+            }
+        }
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {

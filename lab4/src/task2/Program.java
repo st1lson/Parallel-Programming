@@ -1,19 +1,55 @@
 package task2;
 
-import task2.Algorithms.StripedAlgorithm;
-import task2.Models.Matrix;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.ForkJoinPool;
 
 public class Program {
+    private static final String[] NAMES = {
+        "James",
+        "Robert",
+        "John",
+        "Johnny",
+        "Michael",
+        "David",
+        "William",
+        "Richard",
+        "Joseph",
+        "Thomas"
+    };
+
+    private static final String[] GROUPS = { "IP-01", "IP-02", "IP-03" };
+
     public static void main(String[] args) {
-        var firstMatrix = new Matrix(1500, 1500, 1);
-        var secondMatrix = new Matrix(1500, 1500, 10);
+        var studentNames = Arrays.stream(generateArray(NAMES, 1000)).toList();
+        var groupNames = Arrays.stream(generateArray(GROUPS, 1000)).toList();
 
-        var processors = Runtime.getRuntime().availableProcessors();
+        var groups = new ArrayList<Group>();
+        for (var group : groupNames) {
+            var students = new ArrayList<Student>();
+            for (var name : studentNames) {
+                students.add(new Student(name));
+            }
 
-        var stripedAlgorithm = new StripedAlgorithm(firstMatrix, secondMatrix);
+            groups.add(new Group(group, students));
+        }
 
-        var parallelStripedResult = stripedAlgorithm.solve(processors);
+        var journal = new Journal(groups);
 
-        System.out.printf("Parallel striped algorithm: %s%n", parallelStripedResult);
+        new ForkJoinPool().invoke(new WeekTask(journal));
+    }
+
+    private static String[] generateArray(String[] source, int size) {
+        var random = new Random();
+
+        var sourceLength = source.length;
+
+        var newArray = new String[size];
+        for (int i = 0; i < size; i++) {
+            newArray[i] = source[random.nextInt(sourceLength)];
+        }
+
+        return newArray;
     }
 }
