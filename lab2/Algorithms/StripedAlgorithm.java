@@ -66,9 +66,8 @@ public final class StripedAlgorithm implements IAlgorithm {
         }
 
         var endTime = System.currentTimeMillis();
-        var result = new Result(resultMatrix, endTime - startTime);
 
-        return result;
+        return new Result(resultMatrix, endTime - startTime);
     }
 
     @Override

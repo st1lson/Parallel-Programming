@@ -18,30 +18,6 @@ public class WeekTask extends RecursiveAction {
         this.journal = journal;
     }
 
-    @Override
-    protected void compute() {
-        var startTime = System.currentTimeMillis();
-        for (var i = 0; i < NUMBER_OF_WEEKS; i++) {
-            //System.out.printf("Week %s%n%n", i + 1);
-
-            var forks = new ArrayList<RecursiveAction>();
-            for (var j = 0; j < TEACHERS_COUNT + ASSISTANTS_COUNT + 1; j++) {
-                var task = new TeacherTask(journal);
-                task.fork();
-                forks.add(task);
-            }
-
-            for(var fork : forks) {
-                fork.join();
-            }
-
-            //printJournal(journal);
-        }
-
-        var endTime = System.currentTimeMillis();
-        System.out.println(endTime - startTime);
-    }
-
     private static void printJournal(Journal journal) {
         for (var group : journal.groups()) {
             System.out.printf("Group %s%n", group.groupName());
@@ -63,5 +39,29 @@ public class WeekTask extends RecursiveAction {
         }
 
         return strArray;
+    }
+
+    @Override
+    protected void compute() {
+        var startTime = System.currentTimeMillis();
+        for (var i = 0; i < NUMBER_OF_WEEKS; i++) {
+            //System.out.printf("Week %s%n%n", i + 1);
+
+            var forks = new ArrayList<RecursiveAction>();
+            for (var j = 0; j < TEACHERS_COUNT + ASSISTANTS_COUNT + 1; j++) {
+                var task = new TeacherTask(journal);
+                task.fork();
+                forks.add(task);
+            }
+
+            for (var fork : forks) {
+                fork.join();
+            }
+
+            //printJournal(journal);
+        }
+
+        var endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
     }
 }

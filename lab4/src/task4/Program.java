@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Program {
-    private final static String[] wordsToSearch = {"hello", "world"};
+    private final static String[] wordsToSearch = {"hello", "world", "item"};
 
     public static void main(String[] args) throws IOException {
         var filesPath = new File("src/files").getAbsolutePath();
@@ -33,8 +33,12 @@ public class Program {
             var wordMatches = occurrences.stream()
                     .filter(occurrence -> Objects.equals(occurrence.word(), word));
 
-            System.out.printf("The word %s was found in the following files:%n", word);
-            for (var fileName : wordMatches.filter(distinctByKey(Occurrence::file)).map(Occurrence::file).toList()) {
+            var list = wordMatches.filter(distinctByKey(Occurrence::file)).map(Occurrence::file).toList();
+            if (list.size() == 0) continue;
+
+            System.out.printf("The word '%s' was found in the following files:%n", word);
+
+            for (var fileName : list) {
                 System.out.println(fileName);
             }
         }

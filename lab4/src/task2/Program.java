@@ -7,19 +7,19 @@ import java.util.concurrent.ForkJoinPool;
 
 public class Program {
     private static final String[] NAMES = {
-        "James",
-        "Robert",
-        "John",
-        "Johnny",
-        "Michael",
-        "David",
-        "William",
-        "Richard",
-        "Joseph",
-        "Thomas"
+            "James",
+            "Robert",
+            "John",
+            "Johnny",
+            "Michael",
+            "David",
+            "William",
+            "Richard",
+            "Joseph",
+            "Thomas"
     };
 
-    private static final String[] GROUPS = { "IP-01", "IP-02", "IP-03" };
+    private static final String[] GROUPS = {"IP-01", "IP-02", "IP-03"};
 
     public static void main(String[] args) {
         var studentNames = Arrays.stream(generateArray(NAMES, 1000)).toList();

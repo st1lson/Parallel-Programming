@@ -20,20 +20,20 @@ public class Program {
         }
 
         System.out.println("===== STATISTICS =====");
-        var letters = 0d;
+        var mx = 0d;
         var wordsCount = 0;
         for (var item : map.entrySet()) {
-            letters += (item.getKey() * item.getValue());
+            mx += (item.getKey() * item.getValue());
             wordsCount += item.getValue();
         }
-        var mean = letters / wordsCount;
+        var mean = mx / wordsCount;
 
         var sum = 0d;
         for (var item : map.entrySet()) {
             sum += (Math.pow(item.getKey(), 2) * item.getValue());
         }
 
-        var D =sum / wordsCount - Math.pow(mean, 2);
+        var D = sum / wordsCount - Math.pow(mean, 2);
         var standardDeviation = Math.sqrt(D);
 
         System.out.printf("Mean length: %s%n", mean);

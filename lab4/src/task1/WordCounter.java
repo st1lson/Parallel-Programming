@@ -9,6 +9,12 @@ import java.util.concurrent.ForkJoinPool;
 public class WordCounter {
     private final ForkJoinPool forkJoinPool = new ForkJoinPool();
 
+    private static void mergeMaps(Map<Integer, Integer> firstMap, Map<Integer, Integer> secondMap) {
+        for (var key : secondMap.keySet()) {
+            firstMap.merge(key, secondMap.get(key), Integer::sum);
+        }
+    }
+
     public Map<Integer, Integer> countOccurrencesInParallel(Folder folder) {
         return forkJoinPool.invoke(new FolderSearchTask(folder));
     }
@@ -24,11 +30,5 @@ public class WordCounter {
         }
 
         return map;
-    }
-
-    private static void mergeMaps(Map<Integer, Integer> firstMap, Map<Integer, Integer> secondMap) {
-        for (var key : secondMap.keySet()) {
-            firstMap.merge(key, secondMap.get(key), Integer::sum);
-        }
     }
 }

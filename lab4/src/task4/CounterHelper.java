@@ -2,7 +2,9 @@ package task4;
 
 import common.Document;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public final class CounterHelper {
 
