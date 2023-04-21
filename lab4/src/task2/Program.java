@@ -1,24 +1,25 @@
-package lab3.gradesJournal;
+package task2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ForkJoinPool;
 
 public class Program {
     private static final String[] NAMES = {
-        "James",
-        "Robert",
-        "John",
-        "Johnny",
-        "Michael",
-        "David",
-        "William",
-        "Richard",
-        "Joseph",
-        "Thomas"
+            "James",
+            "Robert",
+            "John",
+            "Johnny",
+            "Michael",
+            "David",
+            "William",
+            "Richard",
+            "Joseph",
+            "Thomas"
     };
 
-    private static final String[] GROUPS = { "IP-01", "IP-02", "IP-03" };
+    private static final String[] GROUPS = {"IP-01", "IP-02", "IP-03"};
 
     public static void main(String[] args) {
         var studentNames = Arrays.stream(generateArray(NAMES, 1000)).toList();
@@ -33,11 +34,10 @@ public class Program {
 
             groups.add(new Group(group, students));
         }
+
         var journal = new Journal(groups);
 
-        var weekThread = new Thread(new Week(journal));
-
-        weekThread.start();
+        new ForkJoinPool().invoke(new WeekTask(journal));
     }
 
     private static String[] generateArray(String[] source, int size) {

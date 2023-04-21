@@ -38,7 +38,8 @@ public final class StripedAlgorithm implements IAlgorithm {
         for (var i = 0; i < numberOfRows; i++) {
             var iterationTasks = new ArrayList<Callable<Integer>>();
             for (var j = 0; j < numberOfColumns; j++) {
-                iterationTasks.add(new StripedAlgorithmThread(rows.getMatrix()[i], columns.getMatrix()[j]));
+                var rowIndex = (j + i) % numberOfRows;
+                iterationTasks.add(new StripedAlgorithmThread(rows.getMatrix()[rowIndex], columns.getMatrix()[j]));
             }
 
             try {
@@ -56,7 +57,8 @@ public final class StripedAlgorithm implements IAlgorithm {
 
             for (var j = 0; j < numberOfColumns; j++) {
                 try {
-                    resultMatrix[i][j] = tasks.get(rowOffset + j).get();
+                    var rowIndex = (j + i) % numberOfRows;
+                    resultMatrix[rowIndex][j] = tasks.get(rowOffset + j).get();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -64,9 +66,8 @@ public final class StripedAlgorithm implements IAlgorithm {
         }
 
         var endTime = System.currentTimeMillis();
-        var result = new Result(resultMatrix, endTime - startTime);
 
-        return result;
+        return new Result(resultMatrix, endTime - startTime);
     }
 
     @Override

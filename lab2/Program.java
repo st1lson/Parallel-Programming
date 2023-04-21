@@ -24,11 +24,11 @@ public class Program {
 
         var parallelFoxResult = foxAlgorithm.solve(processors);
 
-        System.out.println(String.format("Row algorithm: %s", rowResult));
-        System.out.println(String.format("Parallel striped algorithm: %s", parallelStripedResult));
-        System.out.println(String.format("Parallel Fox algorithm: %s", parallelFoxResult));
+        System.out.printf("Row algorithm: %s%n", rowResult);
+        System.out.printf("Parallel striped algorithm: %s%n", parallelStripedResult);
+        System.out.printf("Parallel Fox algorithm: %s%n", parallelFoxResult);
 
-        System.out.println(String.format("Striped correct: %s", rowResult.getMatrix().equals(parallelStripedResult.getMatrix())));
-        System.out.println(String.format("Fox correct: %s", rowResult.getMatrix().equals(parallelFoxResult.getMatrix())));
+        System.out.printf("Striped correct: %s%n", rowResult.getMatrix().equals(parallelStripedResult.getMatrix()));
+        System.out.printf("Fox correct: %s%n", rowResult.getMatrix().equals(parallelFoxResult.getMatrix()));
     }
 }

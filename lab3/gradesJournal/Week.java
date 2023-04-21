@@ -17,6 +17,7 @@ public class Week implements Runnable {
 
     @Override
     public void run() {
+        var startTime = System.currentTimeMillis();
         var teacher = new Teacher(journal);
         var assistants = new ArrayList<Teacher>();
         for (var i = 0; i < ASSISTANTS_COUNT; i++) {
@@ -24,8 +25,6 @@ public class Week implements Runnable {
         }
 
         for (var i = 0; i < NUMBER_OF_WEEKS; i++) {
-            System.out.println(String.format("Week %s%n", i + 1));
-
             var teacherThread = new Thread(teacher);
             var assistantsThreads = new ArrayList<Thread>();
             for (var j = 0; j < ASSISTANTS_COUNT; j++) {
@@ -46,8 +45,11 @@ public class Week implements Runnable {
                 e.printStackTrace();
             }
 
-            printJournal(journal);
+            //printJournal(journal);
         }
+
+        var endTime = System.currentTimeMillis();
+        System.out.println(endTime - startTime);
     }
 
     private static void printJournal(Journal journal) {

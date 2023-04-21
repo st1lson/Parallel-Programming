@@ -21,7 +21,7 @@ public final class Result {
     @Override
     public String toString() {
         var builder = new StringBuilder();
-        builder.append(String.format("Duration (milliseconds): %o", this.duration));
+        builder.append(String.format("Duration (milliseconds): %s", this.duration));
 
         return builder.toString();
     }
