@@ -19,19 +19,14 @@ public class LengthCheckerThread extends Thread {
                 sleep(SLEEP_TIME);
                 var queueSize = queue.size();
                 lengthCounter += queueSize;
-                System.out.print("Served: " + queue.servedItemsCount + " Rejected: " + queue.rejectedItemsCount + " Queue length " + queueSize);
-                if (!(queue.servedItemsCount == 0 && queue.rejectedItemsCount == 0)) {
-                    System.out.println("Chance of reject " + (double) queue.rejectedItemsCount / ((double) queue.rejectedItemsCount + (double) queue.servedItemsCount));
-                } else {
-                    System.out.println();
-                }
+                System.out.printf("Served: %s Rejected: %s Queue length: %s%n", queue.servedItemsCount, queue.rejectedItemsCount, queueSize);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void showAvgLength() {
-        System.out.println("Average queue length: " + lengthCounter / (double) workTime / SLEEP_TIME);
+    public double getAverageQueueLength() {
+        return lengthCounter / (double) workTime / SLEEP_TIME;
     }
 }

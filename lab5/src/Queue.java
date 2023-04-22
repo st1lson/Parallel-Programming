@@ -30,7 +30,7 @@ public class Queue {
                 notEmpty.await();
             }
 
-            item = items.get(0);
+            items.remove(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

@@ -28,6 +28,7 @@ class Producer implements Runnable {
             }
 
             queue.put(1);
+            System.out.println("Item added");
         }
     }
 }

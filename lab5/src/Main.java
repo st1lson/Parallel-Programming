@@ -8,9 +8,9 @@ public class Main {
         var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         var callables = new ArrayList<Callable<Void>>();
 
-        callables.add(Helper.toCallable(new Runner(true, 1)));
-        callables.add(Helper.toCallable(new Runner(true, 2)));
-        callables.add(Helper.toCallable(new Runner(true, 3)));
+        callables.add(Helper.toCallable(new Runner(1)));
+        callables.add(Helper.toCallable(new Runner(2)));
+        callables.add(Helper.toCallable(new Runner(3)));
 
         try {
             executor.invokeAll(callables);

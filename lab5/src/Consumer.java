@@ -14,6 +14,7 @@ class Consumer implements Runnable {
     @Override
     public void run() {
         while (System.currentTimeMillis() - startTime <= workTime) {
+            System.out.println("Item taken");
             queue.serve();
         }
     }

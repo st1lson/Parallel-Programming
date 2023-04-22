@@ -10,12 +10,9 @@ public class Runner implements Runnable {
 
     private static final int CONSUMERS_COUNT = 5;
 
-    private final boolean liveInfo;
-
     private final int index;
 
-    public Runner(boolean liveInfo, int index) {
-        this.liveInfo = liveInfo;
+    public Runner(int index) {
         this.index = index;
     }
 
@@ -36,24 +33,18 @@ public class Runner implements Runnable {
         var lengthCounter = new LengthCheckerThread(queue, startTime, SIMULATION_DURATION);
 
         try {
-            if (liveInfo) {
-                lengthCounter.start();
-            }
+            lengthCounter.start();
 
             executor.invokeAll(tasks);
 
-            if (liveInfo) {
-                lengthCounter.join();
-            }
+            lengthCounter.join();
 
             var servedItems = queue.servedItemsCount;
             var rejectedItems = queue.rejectedItemsCount;
             var chanceOfReject = rejectedItems / (servedItems + rejectedItems);
             System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %s%n", index, servedItems, rejectedItems, chanceOfReject);
 
-            if (liveInfo) {
-                lengthCounter.showAvgLength();
-            }
+            System.out.printf("Average queue length: %s%n", lengthCounter.getAverageQueueLength());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
