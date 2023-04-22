@@ -1,25 +1,24 @@
 public class LengthCheckerThread extends Thread {
 
     private static final int SLEEP_TIME = 500;
+
     private final Queue queue;
     private final long startTime;
-    private final long workTime;
-    public int lengthCounter = 0;
+    private int counter;
 
-    public LengthCheckerThread(Queue queue, long startTime, long workTime) {
+    public LengthCheckerThread(Queue queue, long startTime) {
         this.queue = queue;
         this.startTime = startTime;
-        this.workTime = workTime;
     }
 
     @Override
     public void run() {
-        while (System.currentTimeMillis() - startTime <= workTime) {
+        while (System.currentTimeMillis() - startTime <= Runner.SIMULATION_DURATION) {
             try {
                 sleep(SLEEP_TIME);
                 var queueSize = queue.size();
-                lengthCounter += queueSize;
-                System.out.printf("Served: %s Rejected: %s Queue length: %s%n", queue.servedItemsCount, queue.rejectedItemsCount, queueSize);
+                counter += queueSize;
+                System.out.printf("Served: %s Rejected: %s Queue length: %s%n", queue.getServed(), queue.getRejected(), queueSize);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -27,6 +26,6 @@ public class LengthCheckerThread extends Thread {
     }
 
     public double getAverageQueueLength() {
-        return lengthCounter / ((double) workTime / SLEEP_TIME);
+        return counter / ((double) Runner.SIMULATION_DURATION / SLEEP_TIME);
     }
 }

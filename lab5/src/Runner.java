@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class Runner implements Runnable {
 
-    private static final long SIMULATION_DURATION = 10000;
+    public static final long SIMULATION_DURATION = 10000;
 
     private static final int QUEUE_LENGTH = 30;
 
@@ -25,13 +25,13 @@ public class Runner implements Runnable {
         var executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         var tasks = new ArrayList<Callable<Object>>();
-        tasks.add(Executors.callable(new Producer(queue, startTime, SIMULATION_DURATION)));
+        tasks.add(Executors.callable(new Producer(queue, startTime)));
 
         for (int i = 0; i < CONSUMERS_COUNT; i++) {
-            tasks.add(Executors.callable(new Consumer(queue, startTime, SIMULATION_DURATION)));
+            tasks.add(Executors.callable(new Consumer(queue, startTime)));
         }
 
-        var lengthCounter = new LengthCheckerThread(queue, startTime, SIMULATION_DURATION);
+        var lengthCounter = new LengthCheckerThread(queue, startTime);
 
         try {
             lengthCounter.start();
@@ -40,9 +40,9 @@ public class Runner implements Runnable {
 
             lengthCounter.join();
 
-            var servedItems = queue.servedItemsCount;
-            var rejectedItems = queue.rejectedItemsCount;
-            var chanceOfReject = (double)rejectedItems / (servedItems + rejectedItems);
+            var servedItems = queue.getServed();
+            var rejectedItems = queue.getRejected();
+            var chanceOfReject = (double) rejectedItems / (servedItems + rejectedItems);
             System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.6f%n", index, servedItems, rejectedItems, chanceOfReject);
 
             System.out.printf("Average queue length: %1$,.6f%n", lengthCounter.getAverageQueueLength());

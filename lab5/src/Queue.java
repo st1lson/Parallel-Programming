@@ -12,13 +12,21 @@ public class Queue {
     private final Lock lock = new ReentrantLock();
     private final Condition notEmpty = lock.newCondition();
     private final ArrayList<Integer> items;
-    private final int totalItemsCount;
-    public int servedItemsCount = 0;
-    public int rejectedItemsCount = 0;
+    private final int itemsCount;
+    private int served = 0;
+    private int rejected = 0;
 
     public Queue(int itemsCount) {
+        this.itemsCount = itemsCount;
         items = new ArrayList<>(itemsCount);
-        totalItemsCount = itemsCount;
+    }
+
+    public int getServed() {
+        return served;
+    }
+
+    public int getRejected() {
+        return rejected;
     }
 
     public int size() {
@@ -41,7 +49,7 @@ public class Queue {
 
         try {
             sleep(WAIT_TIME);
-            servedItemsCount++;
+            served++;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -50,8 +58,8 @@ public class Queue {
     public void put(int item) {
         lock.lock();
         try {
-            if (items.size() == totalItemsCount) {
-                rejectedItemsCount++;
+            if (items.size() == itemsCount) {
+                rejected++;
                 return;
             }
 

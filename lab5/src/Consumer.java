@@ -1,20 +1,16 @@
-import static java.lang.Thread.sleep;
-
 class Consumer implements Runnable {
 
     private final Queue queue;
     private final long startTime;
-    private final long workTime;
 
-    public Consumer(Queue queue, long startTime, long workTime) {
+    public Consumer(Queue queue, long startTime) {
         this.queue = queue;
         this.startTime = startTime;
-        this.workTime = workTime;
     }
 
     @Override
     public void run() {
-        while (System.currentTimeMillis() - startTime <= workTime) {
+        while (System.currentTimeMillis() - startTime <= Runner.SIMULATION_DURATION) {
             queue.serve();
         }
     }
