@@ -1,9 +1,10 @@
+import static java.lang.Thread.sleep;
+
 class Consumer implements Runnable {
 
     private final Queue queue;
     private final long startTime;
     private final long workTime;
-
 
     public Consumer(Queue queue, long startTime, long workTime) {
         this.queue = queue;
@@ -14,7 +15,6 @@ class Consumer implements Runnable {
     @Override
     public void run() {
         while (System.currentTimeMillis() - startTime <= workTime) {
-            System.out.println("Item taken");
             queue.serve();
         }
     }

@@ -1,6 +1,6 @@
 public class LengthCheckerThread extends Thread {
 
-    private static final int SLEEP_TIME = 50;
+    private static final int SLEEP_TIME = 500;
     private final Queue queue;
     private final long startTime;
     private final long workTime;

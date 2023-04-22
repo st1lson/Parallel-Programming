@@ -6,9 +6,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import static java.lang.Thread.sleep;
 
 public class Queue {
-    final Lock lock = new ReentrantLock();
-    final Condition notEmpty = lock.newCondition();
-    final ArrayList<Integer> items;
+    private final Lock lock = new ReentrantLock();
+    private final Condition notEmpty = lock.newCondition();
+    private final ArrayList<Integer> items;
     private final int totalItemsCount;
     public int servedItemsCount = 0;
     public int rejectedItemsCount = 0;
@@ -24,7 +24,6 @@ public class Queue {
 
     public void serve() {
         lock.lock();
-        int item = 0;
         try {
             while (items.isEmpty()) {
                 notEmpty.await();

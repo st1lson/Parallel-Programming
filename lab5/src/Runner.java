@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Runner implements Runnable {
 
     private static final long SIMULATION_DURATION = 10000;
 
-    private static final int QUEUE_LENGTH = 10;
+    private static final int QUEUE_LENGTH = 30;
 
     private static final int CONSUMERS_COUNT = 5;
 
@@ -21,13 +22,13 @@ public class Runner implements Runnable {
         var startTime = System.currentTimeMillis();
 
         var queue = new Queue(QUEUE_LENGTH);
-        var executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        var executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-        var tasks = new ArrayList<Callable<Void>>();
-        tasks.add(Helper.toCallable(new Producer(queue, startTime, SIMULATION_DURATION)));
+        var tasks = new ArrayList<Callable<Object>>();
+        tasks.add(Executors.callable(new Producer(queue, startTime, SIMULATION_DURATION)));
 
         for (int i = 0; i < CONSUMERS_COUNT; i++) {
-            tasks.add(Helper.toCallable(new Consumer(queue, startTime, SIMULATION_DURATION)));
+            tasks.add(Executors.callable(new Consumer(queue, startTime, SIMULATION_DURATION)));
         }
 
         var lengthCounter = new LengthCheckerThread(queue, startTime, SIMULATION_DURATION);

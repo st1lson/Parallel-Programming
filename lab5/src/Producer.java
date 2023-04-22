@@ -3,7 +3,7 @@ import java.util.Random;
 import static java.lang.Thread.sleep;
 
 class Producer implements Runnable {
-    private static final int TIME_TO_PRODUCE = 1000;
+    private static final int TIME_TO_PRODUCE = 50;
     private final long startTime;
     private final long workTime;
     private final Queue queue;
@@ -28,7 +28,6 @@ class Producer implements Runnable {
             }
 
             queue.put(1);
-            System.out.println("Item added");
         }
     }
 }
