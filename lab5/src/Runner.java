@@ -31,8 +31,7 @@ public final class Runner implements Runnable {
             tasks.add(Executors.callable(new Consumer(queue, startTime)));
         }
 
-        var logger = new Logger(queue, startTime, name);
-        var loggerThread = new Thread(logger);
+        var loggerThread = new Thread(new Logger(queue, startTime, name));
 
         try {
             loggerThread.start();
@@ -40,13 +39,6 @@ public final class Runner implements Runnable {
             threadPool.invokeAll(tasks);
 
             loggerThread.join();
-
-            var servedItems = queue.getServed();
-            var rejectedItems = queue.getRejected();
-            var chanceOfReject = (double) rejectedItems / (servedItems + rejectedItems);
-            System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.3f%n", name, servedItems, rejectedItems, chanceOfReject);
-
-            System.out.printf("Average queue length: %1$,.3f%n", logger.getAverageQueueLength());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

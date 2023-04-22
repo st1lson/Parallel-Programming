@@ -22,14 +22,17 @@ public final class Logger implements Runnable {
                 sleep(SLEEP_TIME);
                 var queueSize = queue.size();
                 counter += queueSize;
-                System.out.printf("Runner: %s Served: %s Rejected: %s Queue length: %s%n", runnerName, queue.getServed(), queue.getRejected(), queueSize);
+
+                var servedItems = queue.getServed();
+                var rejectedItems = queue.getRejected();
+                var chanceOfReject = (double) rejectedItems / (servedItems + rejectedItems);
+                System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.3f%n", runnerName, servedItems, rejectedItems, chanceOfReject);
+
+                var averageQueueLength = counter / ((double) Runner.SIMULATION_DURATION / SLEEP_TIME);
+                System.out.printf("Average queue length: %1$,.3f%n", averageQueueLength);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    public double getAverageQueueLength() {
-        return counter / ((double) Runner.SIMULATION_DURATION / SLEEP_TIME);
     }
 }
