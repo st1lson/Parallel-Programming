@@ -1,4 +1,4 @@
-class Consumer implements Runnable {
+public final class Consumer implements Runnable {
 
     private final Queue queue;
     private final long startTime;

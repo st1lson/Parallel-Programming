@@ -3,7 +3,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class Runner implements Runnable {
+public final class Runner implements Runnable {
 
     public static final long SIMULATION_DURATION = 10000;
 
@@ -11,10 +11,10 @@ public class Runner implements Runnable {
 
     private static final int CONSUMERS_COUNT = 5;
 
-    private final int index;
+    private final String name;
 
-    public Runner(int index) {
-        this.index = index;
+    public Runner(String name) {
+        this.name = name;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Runner implements Runnable {
         var startTime = System.currentTimeMillis();
 
         var queue = new Queue(QUEUE_LENGTH);
-        var executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        var threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         var tasks = new ArrayList<Callable<Object>>();
         tasks.add(Executors.callable(new Producer(queue, startTime)));
@@ -31,25 +31,26 @@ public class Runner implements Runnable {
             tasks.add(Executors.callable(new Consumer(queue, startTime)));
         }
 
-        var lengthCounter = new LengthCheckerThread(queue, startTime);
+        var logger = new Logger(queue, startTime, name);
+        var loggerThread = new Thread(logger);
 
         try {
-            lengthCounter.start();
+            loggerThread.start();
 
-            executor.invokeAll(tasks);
+            threadPool.invokeAll(tasks);
 
-            lengthCounter.join();
+            loggerThread.join();
 
             var servedItems = queue.getServed();
             var rejectedItems = queue.getRejected();
             var chanceOfReject = (double) rejectedItems / (servedItems + rejectedItems);
-            System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.6f%n", index, servedItems, rejectedItems, chanceOfReject);
+            System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.3f%n", name, servedItems, rejectedItems, chanceOfReject);
 
-            System.out.printf("Average queue length: %1$,.6f%n", lengthCounter.getAverageQueueLength());
+            System.out.printf("Average queue length: %1$,.3f%n", logger.getAverageQueueLength());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        executor.shutdown();
+        threadPool.shutdown();
     }
 }

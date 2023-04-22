@@ -2,7 +2,7 @@ import java.util.Random;
 
 import static java.lang.Thread.sleep;
 
-class Producer implements Runnable {
+public final class Producer implements Runnable {
 
     private static final int TIME_TO_PRODUCE = 40;
 

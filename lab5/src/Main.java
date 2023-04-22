@@ -3,22 +3,22 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class Main {
+public final class Main {
 
     public static void main(String[] args) {
-        var executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        var callables = new ArrayList<Callable<Object>>();
+        var threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        var tasks = new ArrayList<Callable<Object>>();
 
-        callables.add(Executors.callable(new Runner(1)));
-        callables.add(Executors.callable(new Runner(2)));
-        callables.add(Executors.callable(new Runner(3)));
+        tasks.add(Executors.callable(new Runner("First runner")));
+        tasks.add(Executors.callable(new Runner("Second runner")));
+        tasks.add(Executors.callable(new Runner("Third runner")));
 
         try {
-            executor.invokeAll(callables);
+            threadPool.invokeAll(tasks);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        executor.shutdown();
+        threadPool.shutdown();
     }
 }

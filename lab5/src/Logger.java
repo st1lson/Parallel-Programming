@@ -1,14 +1,18 @@
-public class LengthCheckerThread extends Thread {
+import static java.lang.Thread.sleep;
+
+public final class Logger implements Runnable {
 
     private static final int SLEEP_TIME = 500;
 
     private final Queue queue;
     private final long startTime;
+    private final String runnerName;
     private int counter;
 
-    public LengthCheckerThread(Queue queue, long startTime) {
+    public Logger(Queue queue, long startTime, String runnerName) {
         this.queue = queue;
         this.startTime = startTime;
+        this.runnerName = runnerName;
     }
 
     @Override
@@ -18,7 +22,7 @@ public class LengthCheckerThread extends Thread {
                 sleep(SLEEP_TIME);
                 var queueSize = queue.size();
                 counter += queueSize;
-                System.out.printf("Served: %s Rejected: %s Queue length: %s%n", queue.getServed(), queue.getRejected(), queueSize);
+                System.out.printf("Runner: %s Served: %s Rejected: %s Queue length: %s%n", runnerName, queue.getServed(), queue.getRejected(), queueSize);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
