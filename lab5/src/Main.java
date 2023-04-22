@@ -9,9 +9,9 @@ public final class Main {
         var threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         var tasks = new ArrayList<Callable<Object>>();
 
-        tasks.add(Executors.callable(new Runner("First runner")));
-        tasks.add(Executors.callable(new Runner("Second runner")));
-        tasks.add(Executors.callable(new Runner("Third runner")));
+        tasks.add(Executors.callable(new Runner("first")));
+        tasks.add(Executors.callable(new Runner("second")));
+        tasks.add(Executors.callable(new Runner("third")));
 
         try {
             threadPool.invokeAll(tasks);

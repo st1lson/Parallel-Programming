@@ -26,10 +26,8 @@ public final class Logger implements Runnable {
                 var servedItems = queue.getServed();
                 var rejectedItems = queue.getRejected();
                 var chanceOfReject = (double) rejectedItems / (servedItems + rejectedItems);
-                System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.3f%n", runnerName, servedItems, rejectedItems, chanceOfReject);
-
                 var averageQueueLength = counter / ((double) Runner.SIMULATION_DURATION / SLEEP_TIME);
-                System.out.printf("Average queue length: %1$,.3f%n", averageQueueLength);
+                System.out.printf("%nRunner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.3f%nAverage queue length: %5$,.3f%n", runnerName, servedItems, rejectedItems, chanceOfReject, averageQueueLength);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
