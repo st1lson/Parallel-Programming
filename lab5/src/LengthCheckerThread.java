@@ -27,6 +27,6 @@ public class LengthCheckerThread extends Thread {
     }
 
     public double getAverageQueueLength() {
-        return lengthCounter / (double) workTime / SLEEP_TIME;
+        return lengthCounter / ((double) workTime / SLEEP_TIME);
     }
 }

@@ -6,6 +6,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import static java.lang.Thread.sleep;
 
 public class Queue {
+
+    private static final long WAIT_TIME = 300;
+
     private final Lock lock = new ReentrantLock();
     private final Condition notEmpty = lock.newCondition();
     private final ArrayList<Integer> items;
@@ -37,7 +40,7 @@ public class Queue {
         }
 
         try {
-            sleep(150);
+            sleep(WAIT_TIME);
             servedItemsCount++;
         } catch (InterruptedException e) {
             e.printStackTrace();

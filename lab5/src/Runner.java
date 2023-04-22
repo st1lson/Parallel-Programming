@@ -42,10 +42,10 @@ public class Runner implements Runnable {
 
             var servedItems = queue.servedItemsCount;
             var rejectedItems = queue.rejectedItemsCount;
-            var chanceOfReject = rejectedItems / (servedItems + rejectedItems);
-            System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %s%n", index, servedItems, rejectedItems, chanceOfReject);
+            var chanceOfReject = (double)rejectedItems / (servedItems + rejectedItems);
+            System.out.printf("Runner %s%nServed: %s%nRejected: %s%nReject chance: %4$,.6f%n", index, servedItems, rejectedItems, chanceOfReject);
 
-            System.out.printf("Average queue length: %s%n", lengthCounter.getAverageQueueLength());
+            System.out.printf("Average queue length: %1$,.6f%n", lengthCounter.getAverageQueueLength());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
