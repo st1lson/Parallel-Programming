@@ -3,7 +3,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public final class Runner implements Runnable {
+public final class Runner implements Callable<SimulationResult> {
 
     public static final long SIMULATION_DURATION = 10000;
 
@@ -18,7 +18,7 @@ public final class Runner implements Runnable {
     }
 
     @Override
-    public void run() {
+    public SimulationResult call() {
         var startTime = System.currentTimeMillis();
 
         var queue = new Queue(QUEUE_LENGTH);
@@ -31,7 +31,8 @@ public final class Runner implements Runnable {
             tasks.add(Executors.callable(new Consumer(queue, startTime)));
         }
 
-        var loggerThread = new Thread(new Logger(queue, startTime, name));
+        var logger = new Logger(queue, startTime, name);
+        var loggerThread = new Thread(logger);
 
         try {
             loggerThread.start();
@@ -44,5 +45,7 @@ public final class Runner implements Runnable {
         }
 
         threadPool.shutdown();
+
+        return logger.getResult();
     }
 }

@@ -7,8 +7,6 @@ import static java.lang.Thread.sleep;
 
 public final class Queue {
 
-    private static final long WAIT_TIME = 300;
-
     private final Lock lock = new ReentrantLock();
     private final Condition notEmpty = lock.newCondition();
     private final ArrayList<Integer> items;
@@ -29,6 +27,10 @@ public final class Queue {
         return rejected;
     }
 
+    public synchronized void incrementServed() {
+        served++;
+    }
+
     public int size() {
         return items.size();
     }
@@ -45,13 +47,6 @@ public final class Queue {
             e.printStackTrace();
         } finally {
             lock.unlock();
-        }
-
-        try {
-            sleep(WAIT_TIME);
-            served++;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 

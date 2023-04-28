@@ -16,13 +16,11 @@ public final class Producer implements Runnable {
 
     @Override
     public void run() {
-        var lowTimeLimit = (int) (TIME_TO_PRODUCE - (TIME_TO_PRODUCE * 0.5));
-        var highTimeLimit = (int) (TIME_TO_PRODUCE + (TIME_TO_PRODUCE * 0.5));
         var random = new Random();
 
         while (System.currentTimeMillis() - startTime <= Runner.SIMULATION_DURATION) {
             try {
-                sleep(random.nextInt((highTimeLimit - lowTimeLimit) + 1) + lowTimeLimit);
+                sleep(random.nextInt(TIME_TO_PRODUCE));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

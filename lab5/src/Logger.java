@@ -33,4 +33,11 @@ public final class Logger implements Runnable {
             }
         }
     }
+
+    SimulationResult getResult() {
+        var servedItems = queue.getServed();
+        var rejectedItems = queue.getRejected();
+
+        return new SimulationResult(rejectedItems, servedItems, (double) rejectedItems / (servedItems + rejectedItems), counter / ((double) Runner.SIMULATION_DURATION / SLEEP_TIME));
+    }
 }
