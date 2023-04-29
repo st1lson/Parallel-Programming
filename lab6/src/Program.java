@@ -1,13 +1,11 @@
-import mpi.*;
+import Models.Matrix;
 
 public class Program {
     public static void main(String[] args) {
-        MPI.Init(args);
-        int rank = MPI.COMM_WORLD.Rank();
-        int size = MPI.COMM_WORLD.Size();
+        var firstMatrix = new Matrix(50, 50);
+        var secondMatrix = new Matrix(50, 50);
 
-        System.out.println(rank + " " + size);
-
-        MPI.Finalize();
+        BlockingMultiplier.setArgs(args);
+        new BlockingMultiplier().multiply(firstMatrix, secondMatrix);
     }
 }
