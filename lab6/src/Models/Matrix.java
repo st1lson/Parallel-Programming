@@ -100,11 +100,12 @@ public final class Matrix {
         return block;
     }
 
-    public static void partialUpdate(Matrix resultMatrix, Matrix subMatrix, int indexIStart, int indexIFinish) {
+    public void partialUpdate(Matrix subMatrix, int indexIStart, int indexIFinish) {
         int rowIndex = 0;
         for (int i = indexIStart; i < indexIFinish; i++) {
-            if (resultMatrix.columns >= 0)
-                System.arraycopy(subMatrix.items[rowIndex], 0, resultMatrix.items[i], 0, resultMatrix.columns);
+            if (columns >= 0) {
+                System.arraycopy(subMatrix.items[rowIndex], 0, items[i], 0, columns);
+            }
 
             rowIndex++;
         }
