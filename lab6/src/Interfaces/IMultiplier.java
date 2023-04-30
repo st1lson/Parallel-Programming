@@ -1,7 +1,8 @@
 package Interfaces;
 
 import Models.Matrix;
+import Models.Result;
 
 public interface IMultiplier {
-    void multiply(Matrix firstMatrix, Matrix secondMatrix);
+    Result multiply(Matrix firstMatrix, Matrix secondMatrix);
 }

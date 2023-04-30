@@ -2,7 +2,7 @@ package Models;
 
 public final class Result {
     private final Matrix resultMatrix;
-    private long duration = 0;
+    private final long duration;
 
     public Result(Matrix resultMatrix, long duration) {
         this.resultMatrix = resultMatrix;
