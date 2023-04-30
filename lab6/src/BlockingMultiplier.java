@@ -1,4 +1,5 @@
 import Interfaces.IMultiplier;
+import Models.Chunk;
 import Models.Matrix;
 import Models.Result;
 import mpi.MPI;
@@ -57,12 +58,16 @@ public final class BlockingMultiplier implements IMultiplier {
 
         var result = new Matrix(firstMatrixRows, firstMatrixColumns);
         var secondMatrixBuffer = secondMatrix.toByteArray();
+
+        var chunks = new Chunk[workersCount];
         for (var workerIndex = 1; workerIndex <= workersCount; workerIndex++) {
             var rowStartIndex = (workerIndex - 1) * rowsPerWorker;
             var rowFinishIndex = rowStartIndex + rowsPerWorker;
             if (workerIndex == workersCount) {
                 rowFinishIndex += extraRows;
             }
+
+            chunks[workerIndex - 1] = new Chunk(rowStartIndex, rowFinishIndex);
 
             var firstSubMatrix = firstMatrix.getSubMatrix(rowStartIndex, rowFinishIndex, secondMatrixRows);
             var firstSubMatrixBuffer = firstSubMatrix.toByteArray();
@@ -75,19 +80,17 @@ public final class BlockingMultiplier implements IMultiplier {
         }
 
         for (var workerIndex = 1; workerIndex <= workersCount; workerIndex++) {
-            var rowStartIndex = new int[1];
-            var rowFinishIndex = new int[1];
+            var chunk = chunks[workerIndex - 1];
+            var startIndex = chunk.startIndex();
+            var finishIndex = chunk.finishIndex();
 
-            MPI.COMM_WORLD.Recv(rowStartIndex, 0, 1, MPI.INT, workerIndex, FROM_WORKER);
-            MPI.COMM_WORLD.Recv(rowFinishIndex, 0, 1, MPI.INT, workerIndex, FROM_WORKER);
-
-            var resultElementsCount = (rowFinishIndex[0] - rowStartIndex[0] + 1) * firstMatrixRows;
+            var resultElementsCount = (finishIndex - startIndex + 1) * firstMatrixRows;
             var resultMatrixBuffer = new byte[resultElementsCount * Matrix.INT32_BYTE_SIZE];
 
             MPI.COMM_WORLD.Recv(resultMatrixBuffer, 0, resultElementsCount * Matrix.INT32_BYTE_SIZE, MPI.BYTE, workerIndex, FROM_WORKER);
 
-            var resultMatrix = new Matrix(resultMatrixBuffer, rowFinishIndex[0] - rowStartIndex[0], firstMatrixColumns);
-            result.partialUpdate(resultMatrix, rowStartIndex[0], rowFinishIndex[0]);
+            var resultMatrix = new Matrix(resultMatrixBuffer, finishIndex - startIndex, firstMatrixColumns);
+            result.partialUpdate(resultMatrix, startIndex, finishIndex);
         }
 
         return new Result(result, (System.currentTimeMillis() - startTime));
@@ -112,8 +115,6 @@ public final class BlockingMultiplier implements IMultiplier {
         var matrixResult = subMatrix.multiply(matrix);
         var matrixResultBuffer = matrixResult.toByteArray();
 
-        MPI.COMM_WORLD.Send(rowStartIndex, 0, 1, MPI.INT, 0, FROM_WORKER);
-        MPI.COMM_WORLD.Send(rowFinishIndex, 0, 1, MPI.INT, 0, FROM_WORKER);
         MPI.COMM_WORLD.Send(matrixResultBuffer, 0, matrixResultBuffer.length, MPI.BYTE, 0, FROM_WORKER);
     }
 }
