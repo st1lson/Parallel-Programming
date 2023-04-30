@@ -43,8 +43,7 @@ public final class Matrix {
         var array = new int[rows][cols];
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
-                var integer = buffer.getInt();
-                array[i][j] = integer;
+                array[i][j] = buffer.getInt();
             }
         }
 
@@ -162,10 +161,8 @@ public final class Matrix {
         return new Matrix(result);
     }
 
-    public byte[] flattenIntArray() {
-        var rows = items.length;
-        var cols = items[0].length;
-        var buffer = ByteBuffer.allocate(rows * cols * INT32_BYTE_SIZE);
+    public byte[] toByteArray() {
+        var buffer = ByteBuffer.allocate(rows * columns * INT32_BYTE_SIZE);
         buffer.order(ByteOrder.nativeOrder());
         var intBuffer = buffer.asIntBuffer();
         for (var ints : items) {

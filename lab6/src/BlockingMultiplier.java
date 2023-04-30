@@ -2,14 +2,11 @@ import Interfaces.IMultiplier;
 import Models.Matrix;
 import Models.Result;
 import mpi.MPI;
-import mpi.MPIException;
 
 public final class BlockingMultiplier implements IMultiplier {
 
     private static final int FROM_MASTER = 1;
-    private static final int FROM_WORKER = 1;
-
-    private final String[] args;
+    private static final int FROM_WORKER = 10;
 
     private final Matrix firstMatrix;
     private final Matrix secondMatrix;
@@ -18,6 +15,8 @@ public final class BlockingMultiplier implements IMultiplier {
     private final int firstMatrixColumns;
     private final int secondMatrixRows;
     private final int secondMatrixColumns;
+
+    private final String[] args;
 
     BlockingMultiplier(Matrix firstMatrix, Matrix secondMatrix, String[] args) {
         this.firstMatrix = firstMatrix;
@@ -31,12 +30,12 @@ public final class BlockingMultiplier implements IMultiplier {
         this.args = args;
     }
 
-    public Result multiply() throws MPIException {
-        MPI.Init(args);
-        var size = MPI.COMM_WORLD.Size();
-        var rank = MPI.COMM_WORLD.Rank();
-
+    public Result multiply() {
         try {
+            MPI.Init(args);
+            var size = MPI.COMM_WORLD.Size();
+            var rank = MPI.COMM_WORLD.Rank();
+
             if (rank == 0) {
                 return processMaster(size);
             } else {
@@ -52,13 +51,12 @@ public final class BlockingMultiplier implements IMultiplier {
     private Result processMaster(int size) {
         var startTime = MPI.Wtime();
 
-        var result = new Matrix(firstMatrixRows, firstMatrixColumns);
-
         var workersCount = size - 1;
         var rowsPerWorker = firstMatrixRows / workersCount;
         var extraRows = firstMatrixRows % workersCount;
 
-        var secondMatrixBuffer = secondMatrix.flattenIntArray();
+        var result = new Matrix(firstMatrixRows, firstMatrixColumns);
+        var secondMatrixBuffer = secondMatrix.toByteArray();
         for (var workerIndex = 1; workerIndex <= workersCount; workerIndex++) {
             var rowStartIndex = (workerIndex - 1) * rowsPerWorker;
             var rowFinishIndex = rowStartIndex + rowsPerWorker;
@@ -67,11 +65,11 @@ public final class BlockingMultiplier implements IMultiplier {
             }
 
             var firstSubMatrix = firstMatrix.getSubMatrix(rowStartIndex, rowFinishIndex, secondMatrixRows);
-            var firstSubMatrixBuffer = firstSubMatrix.flattenIntArray();
+            var firstSubMatrixBuffer = firstSubMatrix.toByteArray();
             var subMatrixSize = (rowFinishIndex - rowStartIndex + 1) * firstMatrixRows;
 
-            MPI.COMM_WORLD.Send(new int[]{ rowStartIndex }, 0, 1, MPI.INT, workerIndex, FROM_MASTER);
-            MPI.COMM_WORLD.Send(new int[]{ rowFinishIndex }, 0, 1, MPI.INT, workerIndex, FROM_MASTER);
+            MPI.COMM_WORLD.Send(new int[]{rowStartIndex}, 0, 1, MPI.INT, workerIndex, FROM_MASTER);
+            MPI.COMM_WORLD.Send(new int[]{rowFinishIndex}, 0, 1, MPI.INT, workerIndex, FROM_MASTER);
             MPI.COMM_WORLD.Send(firstSubMatrixBuffer, 0, subMatrixSize * Matrix.INT32_BYTE_SIZE, MPI.BYTE, workerIndex, FROM_MASTER);
             MPI.COMM_WORLD.Send(secondMatrixBuffer, 0, secondMatrixRows * secondMatrixColumns * Matrix.INT32_BYTE_SIZE, MPI.BYTE, workerIndex, FROM_MASTER);
         }
@@ -92,9 +90,7 @@ public final class BlockingMultiplier implements IMultiplier {
             result.partialUpdate(resultMatrix, rowStartIndex[0], rowFinishIndex[0]);
         }
 
-        var endTime = MPI.Wtime();
-
-        return new Result(result, (long) (endTime - startTime));
+        return new Result(result, (long) (MPI.Wtime() - startTime));
     }
 
     private void processWorker() {
@@ -114,7 +110,7 @@ public final class BlockingMultiplier implements IMultiplier {
         var matrix = new Matrix(matrixBuffer, secondMatrixRows, secondMatrixColumns);
         var subMatrix = new Matrix(subMatrixBuffer, rowFinishIndex[0] - rowStartIndex[0], firstMatrixColumns);
         var matrixResult = subMatrix.multiply(matrix);
-        var matrixResultBuffer = matrixResult.flattenIntArray();
+        var matrixResultBuffer = matrixResult.toByteArray();
 
         MPI.COMM_WORLD.Send(rowStartIndex, 0, 1, MPI.INT, 0, FROM_WORKER);
         MPI.COMM_WORLD.Send(rowFinishIndex, 0, 1, MPI.INT, 0, FROM_WORKER);
