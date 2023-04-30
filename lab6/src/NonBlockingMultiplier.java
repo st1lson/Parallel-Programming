@@ -5,9 +5,6 @@ import Models.Result;
 import mpi.MPI;
 import mpi.Request;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public final class NonBlockingMultiplier implements IMultiplier {
 
     private static final int FROM_MASTER = 1;
@@ -54,7 +51,7 @@ public final class NonBlockingMultiplier implements IMultiplier {
     }
 
     private Result processMaster(int size) {
-        var startTime = MPI.Wtime();
+        var startTime = System.currentTimeMillis();
 
         var workersCount = size - 1;
         var rowsPerWorker = firstMatrixRows / workersCount;
@@ -93,24 +90,19 @@ public final class NonBlockingMultiplier implements IMultiplier {
             results[workerIndex - 1] = MPI.COMM_WORLD.Irecv(resultMatrixBuffer, 0, resultElementsCount * Matrix.INT32_BYTE_SIZE, MPI.BYTE, workerIndex, FROM_WORKER);
         }
 
-        var counter = 0;
-        while (counter != workersCount) {
-            var statuses = Request.Waitsome(results);
+        Request.Waitall(results);
 
-            for (var status : statuses) {
-                var chunk = chunks[status.index];
-                var finishIndex = chunk.finishIndex();
-                var startIndex = chunk.startIndex();
-                var buffer = chunk.buffer();
+        for (var workerIndex = 1; workerIndex <= workersCount; workerIndex++) {
+            var chunk = chunks[workerIndex - 1];
+            var finishIndex = chunk.finishIndex();
+            var startIndex = chunk.startIndex();
+            var buffer = chunk.buffer();
 
-                var resultMatrix = new Matrix(buffer, finishIndex - startIndex, firstMatrixColumns);
-                result.partialUpdate(resultMatrix, startIndex, finishIndex);
-
-                counter++;
-            }
+            var resultMatrix = new Matrix(buffer, finishIndex - startIndex, firstMatrixColumns);
+            result.partialUpdate(resultMatrix, startIndex, finishIndex);
         }
 
-        return new Result(result, (long) (MPI.Wtime() - startTime));
+        return new Result(result, (System.currentTimeMillis() - startTime));
     }
 
     private void processWorker() {

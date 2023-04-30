@@ -49,7 +49,7 @@ public final class BlockingMultiplier implements IMultiplier {
     }
 
     private Result processMaster(int size) {
-        var startTime = MPI.Wtime();
+        var startTime = System.currentTimeMillis();
 
         var workersCount = size - 1;
         var rowsPerWorker = firstMatrixRows / workersCount;
@@ -90,7 +90,7 @@ public final class BlockingMultiplier implements IMultiplier {
             result.partialUpdate(resultMatrix, rowStartIndex[0], rowFinishIndex[0]);
         }
 
-        return new Result(result, (long) (MPI.Wtime() - startTime));
+        return new Result(result, (System.currentTimeMillis() - startTime));
     }
 
     private void processWorker() {
