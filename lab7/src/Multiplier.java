@@ -33,41 +33,41 @@ public final class Multiplier implements IMultiplier {
             var elementsPerProcess = firstMatrixRows / size * secondMatrixColumns;
             var elementsToAddToLastProcess = (firstMatrixRows % size) * secondMatrixColumns;
 
-            var countsInBytes = new int[size];
+            var bytes = new int[size];
             for (var i = 0; i < size; i++) {
                 if (i != size - 1) {
-                    countsInBytes[i] = elementsPerProcess * Matrix.INT32_BYTE_SIZE;
+                    bytes[i] = elementsPerProcess * Matrix.INT32_BYTE_SIZE;
                 } else {
-                    countsInBytes[i] = (elementsPerProcess + elementsToAddToLastProcess) * Matrix.INT32_BYTE_SIZE;
+                    bytes[i] = (elementsPerProcess + elementsToAddToLastProcess) * Matrix.INT32_BYTE_SIZE;
                 }
             }
 
-            var displs = new int[size];
-            displs[0] = 0;
-            for (var i = 1; i < displs.length; i++) {
-                displs[i] = countsInBytes[i - 1] + displs[i - 1];
+            var offsets = new int[size];
+            for (var i = 0; i < offsets.length; i++) {
+                if (i == 0) continue;
+
+                offsets[i] = bytes[i - 1] + offsets[i - 1];
             }
 
-            var byteMatrA = firstMatrix.toByteArray();
-            var byteMatrB = secondMatrix.toByteArray();
+            var firstMatrixBuffer = firstMatrix.toByteArray();
+            var secondMatrixBuffer = secondMatrix.toByteArray();
 
-            var currentCountInBytes = countsInBytes[rank];
-            var partMatrAByte = new byte[currentCountInBytes];
+            var taskBytes = bytes[rank];
+            var subMatrixBytes = new byte[taskBytes];
 
             var resByte = new byte[firstMatrixRows * secondMatrixColumns * Matrix.INT32_BYTE_SIZE];
 
-            MPI.COMM_WORLD.Scatterv(byteMatrA, 0, countsInBytes, displs, MPI.BYTE, partMatrAByte, 0, currentCountInBytes, MPI.BYTE, 0);
+            MPI.COMM_WORLD.Scatterv(firstMatrixBuffer, 0, bytes, offsets, MPI.BYTE, subMatrixBytes, 0, taskBytes, MPI.BYTE, 0);
 
-            MPI.COMM_WORLD.Bcast(byteMatrB, 0, byteMatrB.length, MPI.BYTE, 0);
+            MPI.COMM_WORLD.Bcast(secondMatrixBuffer, 0, secondMatrixBuffer.length, MPI.BYTE, 0);
 
-            var partMatrixAInProcess = new Matrix(partMatrAByte, currentCountInBytes / (Matrix.INT32_BYTE_SIZE * secondMatrixColumns), firstMatrixRows);
-            var matrixBInProcess = new Matrix(byteMatrB, secondMatrixColumns, firstMatrixRows);
+            var subMatrix = new Matrix(subMatrixBytes, taskBytes / (Matrix.INT32_BYTE_SIZE * secondMatrixColumns), firstMatrixRows);
+            var secondMatrix = new Matrix(secondMatrixBuffer, secondMatrixColumns, firstMatrixRows);
 
-            var resInProcess = partMatrixAInProcess.multiply(matrixBInProcess);
+            var result = subMatrix.multiply(secondMatrix);
+            var resultBuffer = result.toByteArray();
 
-            var resInProcessByte = resInProcess.toByteArray();
-
-            MPI.COMM_WORLD.Gatherv(resInProcessByte, 0, resInProcessByte.length, MPI.BYTE, resByte, 0, countsInBytes, displs, MPI.BYTE, 0);
+            MPI.COMM_WORLD.Gatherv(resultBuffer, 0, resultBuffer.length, MPI.BYTE, resByte, 0, bytes, offsets, MPI.BYTE, 0);
 
             if (rank == 0) {
                 return new Result(new Matrix(resByte, firstMatrixRows, secondMatrixColumns), System.currentTimeMillis() - startTime);
