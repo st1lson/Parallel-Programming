@@ -36,6 +36,7 @@ public final class BlockingMultiplier implements IMultiplier {
             MPI.Init(args);
             var size = MPI.COMM_WORLD.Size();
             var rank = MPI.COMM_WORLD.Rank();
+            if (size < 2) return null;
 
             if (rank == 0) {
                 return processMaster(size);

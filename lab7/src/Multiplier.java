@@ -67,8 +67,9 @@ public final class Multiplier implements IMultiplier {
             var result = subMatrix.multiply(secondMatrix);
             var resultBuffer = result.toByteArray();
 
-            MPI.COMM_WORLD.Gatherv(resultBuffer, 0, resultBuffer.length, MPI.BYTE, resByte, 0, bytes, offsets, MPI.BYTE, 0);
-
+            //MPI.COMM_WORLD.Gatherv(resultBuffer, 0, resultBuffer.length, MPI.BYTE, resByte, 0, bytes, offsets, MPI.BYTE, 0);
+            MPI.COMM_WORLD.Allgatherv(resultBuffer, 0, resultBuffer.length, MPI.BYTE, resByte, 0, bytes, offsets, MPI.BYTE);
+            
             if (rank == 0) {
                 return new Result(new Matrix(resByte, firstMatrixRows, secondMatrixColumns), System.currentTimeMillis() - startTime);
             }
