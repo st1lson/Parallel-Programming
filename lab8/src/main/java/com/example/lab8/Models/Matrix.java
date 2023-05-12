@@ -24,7 +24,7 @@ public final class Matrix {
     public Matrix(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        this.items = new int[rows][columns];
+        this.items = generateMatrix(rows, columns);
     }
 
     public Matrix(Matrix[][] matrix, int rows, int columns) {
@@ -55,7 +55,7 @@ public final class Matrix {
     private final int[][] generateMatrix(int rows, int columns) {
         var matrix = new int[rows][columns];
 
-        var random = new Random(this.randomSeed);
+        var random = this.randomSeed != 0 ? new Random(this.randomSeed) : new Random();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 matrix[i][j] = random.nextInt(10);
